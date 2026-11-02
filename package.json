@@ -1,0 +1,17 @@
+{
+  "name": "unslop-kakeibo-showcase",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-concept Japanese household ledger (Kakeibo) showcase built with the unslop UI design skill (5-Line Direction & 9 Passes).",
+  "type": "module",
+  "scripts": {
+    "prepare:public": "node scripts/prepare-public.mjs",
+    "docs:dev": "npm run prepare:public && vitepress dev docs",
+    "docs:build": "npm run prepare:public && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3"
+  },
+  "license": "MIT"
+}
