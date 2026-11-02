@@ -6,7 +6,11 @@ Each of the four applications is a standalone, zero-dependency HTML/CSS/JS imple
 
 ## `00` Masu (枡) — Quiet Graphite Ledger
 
-- **Live Demo**: **[Open 00 Masu in Browser ↗](/unslop-kakeibo-showcase/demo/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/index.html" target="_blank" rel="noopener external">Open 00 Masu (Live App) ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/masu/index.html" target="_blank" rel="noopener external">/masu/index.html ↗</a>
+</div>
+
 - **Character**: `calm, exact, tactile`
 - **World**: Graphite writing instruments, freshly printed thermal paper receipts, brushed metal payment cards with brass EMV contacts, and the crisp wooden compartments of a traditional Japanese *masu* measuring box.
 - **Surface Palette**:
@@ -34,7 +38,11 @@ Each of the four applications is a standalone, zero-dependency HTML/CSS/JS imple
 
 ## `01` Kakei Shiori (家計栞) — Archival Paper Folio
 
-- **Live Demo**: **[Open 01 Kakei Shiori in Browser ↗](/unslop-kakeibo-showcase/demo/concepts/shiori/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/shiori/index.html" target="_blank" rel="noopener external">Open 01 Kakei Shiori (Live App) ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/shiori/index.html" target="_blank" rel="noopener external">/shiori/index.html ↗</a>
+</div>
+
 - **Character**: `warm, literary, unhurried`
 - **World**: Fountain-pen ink on archival cotton paper, open two-page book spreads, brass paperclips, copperplate botanical specimen vouchers, and a crimson woven bookmark ribbon.
 - **Surface Palette**:
@@ -62,7 +70,11 @@ Each of the four applications is a standalone, zero-dependency HTML/CSS/JS imple
 
 ## `02` Pulse (パルス) — High-Precision Telemetry
 
-- **Live Demo**: **[Open 02 Pulse in Browser ↗](/unslop-kakeibo-showcase/demo/concepts/pulse/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/pulse/index.html" target="_blank" rel="noopener external">Open 02 Pulse (Live App) ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/pulse/index.html" target="_blank" rel="noopener external">/pulse/index.html ↗</a>
+</div>
+
 - **Character**: `technical, high-precision, atmospheric`
 - **World**: Studio audio spectrum analyzers, high-precision oscilloscope displays, mechanical split-flap departure boards, and dark anodized aluminum instrument panels.
 - **Surface Palette**:
@@ -90,7 +102,11 @@ Each of the four applications is a standalone, zero-dependency HTML/CSS/JS imple
 
 ## `03` Tokonoma (床の間) — Architectural Swiss Grid
 
-- **Live Demo**: **[Open 03 Tokonoma in Browser ↗](/unslop-kakeibo-showcase/demo/concepts/tokonoma/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/tokonoma/index.html" target="_blank" rel="noopener external">Open 03 Tokonoma (Live App) ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/tokonoma/index.html" target="_blank" rel="noopener external">/tokonoma/index.html ↗</a>
+</div>
+
 - **Character**: `architectural, serene, structural`
 - **World**: White shikkui plaster walls, exposed `1px` structural architectural lines, the contemplative negative space (*Ma*) of a Japanese *tokonoma* alcove, and a single vermilion hanko seal impression.
 - **Surface Palette**:

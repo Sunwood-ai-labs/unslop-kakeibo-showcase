@@ -16,6 +16,15 @@
   <p>
     <a href="./README.md">English</a> · <strong>日本語 (Japanese)</strong>
   </p>
+
+  <p>
+    <strong>🚀 ライブアプリを直接開く:</strong>
+    <a href="https://sunwood-ai-labs.github.io/unslop-kakeibo-showcase/demo/index.html"><strong>00 枡 (Masu) ↗</strong></a> ·
+    <a href="https://sunwood-ai-labs.github.io/unslop-kakeibo-showcase/demo/concepts/shiori/index.html"><strong>01 家計栞 (Shiori) ↗</strong></a> ·
+    <a href="https://sunwood-ai-labs.github.io/unslop-kakeibo-showcase/demo/concepts/pulse/index.html"><strong>02 パルス (Pulse) ↗</strong></a> ·
+    <a href="https://sunwood-ai-labs.github.io/unslop-kakeibo-showcase/demo/concepts/tokonoma/index.html"><strong>03 床の間 (Tokonoma) ↗</strong></a> ·
+    <a href="https://sunwood-ai-labs.github.io/unslop-kakeibo-showcase/ja/"><strong>解説ドキュメント ↗</strong></a>
+  </p>
 </div>
 
 ---

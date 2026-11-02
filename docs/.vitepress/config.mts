@@ -8,7 +8,9 @@ export default defineConfig({
   cleanUrls: false,
   ignoreDeadLinks: [
     /^\/demo\//,
-    /^\/unslop-kakeibo-showcase\/demo\//
+    /^\/(masu|shiori|pulse|tokonoma)\//,
+    /^\/unslop-kakeibo-showcase\/demo\//,
+    /^\/unslop-kakeibo-showcase\/(masu|shiori|pulse|tokonoma)\//
   ],
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/unslop-kakeibo-showcase/assets/icon.svg' }]
@@ -36,12 +38,12 @@ export default defineConfig({
           { text: '4 Concepts', link: '/guide/concepts' },
           { text: '9 Passes & Subtraction', link: '/guide/nine-passes' },
           {
-            text: 'Live Demos',
+            text: 'Live Demos (4 Apps)',
             items: [
-              { text: '00 Masu (枡)', link: '/demo/index.html', target: '_blank' },
-              { text: '01 Kakei Shiori (家計栞)', link: '/demo/concepts/shiori/index.html', target: '_blank' },
-              { text: '02 Pulse (パルス)', link: '/demo/concepts/pulse/index.html', target: '_blank' },
-              { text: '03 Tokonoma (床の間)', link: '/demo/concepts/tokonoma/index.html', target: '_blank' }
+              { text: '00 Masu (枡) — Quiet Graphite', link: '/demo/index.html', target: '_blank' },
+              { text: '01 Kakei Shiori (家計栞) — Archival Paper', link: '/demo/concepts/shiori/index.html', target: '_blank' },
+              { text: '02 Pulse (パルス) — Telemetry', link: '/demo/concepts/pulse/index.html', target: '_blank' },
+              { text: '03 Tokonoma (床の間) — Swiss Grid', link: '/demo/concepts/tokonoma/index.html', target: '_blank' }
             ]
           }
         ],
@@ -85,12 +87,12 @@ export default defineConfig({
           { text: '4つのコンセプト', link: '/ja/guide/concepts' },
           { text: '9つのPassと引き算', link: '/ja/guide/nine-passes' },
           {
-            text: 'ライブデモ',
+            text: 'ライブデモ（4アプリ）',
             items: [
-              { text: '00 枡 (Masu)', link: '/demo/index.html', target: '_blank' },
-              { text: '01 家計栞 (Shiori)', link: '/demo/concepts/shiori/index.html', target: '_blank' },
-              { text: '02 パルス (Pulse)', link: '/demo/concepts/pulse/index.html', target: '_blank' },
-              { text: '03 床の間 (Tokonoma)', link: '/demo/concepts/tokonoma/index.html', target: '_blank' }
+              { text: '00 枡 (Masu) — 静謐なグラファイト', link: '/demo/index.html', target: '_blank' },
+              { text: '01 家計栞 (Shiori) — 書斎のコットン紙', link: '/demo/concepts/shiori/index.html', target: '_blank' },
+              { text: '02 パルス (Pulse) — 高精度テレメトリ', link: '/demo/concepts/pulse/index.html', target: '_blank' },
+              { text: '03 床の間 (Tokonoma) — 1pxスイスグリッド', link: '/demo/concepts/tokonoma/index.html', target: '_blank' }
             ]
           }
         ],
@@ -104,7 +106,7 @@ export default defineConfig({
             ]
           },
           {
-            text: 'ライブアプリ（別タブ起動）',
+            text: 'ライブアプリ（全画面で起動）',
             items: [
               { text: '00 枡 — 静謐なグラファイト台帳', link: '/demo/index.html', target: '_blank' },
               { text: '01 家計栞 — 書斎のコットン紙台帳', link: '/demo/concepts/shiori/index.html', target: '_blank' },

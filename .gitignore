@@ -5,6 +5,10 @@ node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 docs/public/demo/
+docs/public/masu/
+docs/public/shiori/
+docs/public/pulse/
+docs/public/tokonoma/
 docs/public/screenshots/
 docs/public/assets/
 

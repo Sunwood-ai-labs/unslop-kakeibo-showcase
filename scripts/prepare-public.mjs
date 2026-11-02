@@ -48,16 +48,53 @@ const conceptsSrc = path.join(rootDir, 'concepts');
 const conceptsDest = path.join(demoDir, 'concepts');
 copyDirRecursive(conceptsSrc, conceptsDest);
 
-// 3. Copy screenshots/*.png -> docs/public/screenshots/*.png
+// 3. Also create clean root-level short directories:
+//    - docs/public/masu/
+//    - docs/public/shiori/
+//    - docs/public/pulse/
+//    - docs/public/tokonoma/
+const masuShortDir = path.join(publicDir, 'masu');
+ensureDir(masuShortDir);
+for (const file of ['index.html', 'styles.css', 'app.js']) {
+  copyFileSafe(path.join(rootDir, file), path.join(masuShortDir, file));
+}
+// Rewrite switcher links in docs/public/masu/index.html so sibling short dirs work seamlessly
+const masuShortHtmlPath = path.join(masuShortDir, 'index.html');
+if (fs.existsSync(masuShortHtmlPath)) {
+  const html = fs
+    .readFileSync(masuShortHtmlPath, 'utf8')
+    .replace('href="./index.html"', 'href="../masu/index.html"')
+    .replace('href="./concepts/shiori/index.html"', 'href="../shiori/index.html"')
+    .replace('href="./concepts/pulse/index.html"', 'href="../pulse/index.html"')
+    .replace('href="./concepts/tokonoma/index.html"', 'href="../tokonoma/index.html"');
+  fs.writeFileSync(masuShortHtmlPath, html, 'utf8');
+}
+
+for (const slug of ['shiori', 'pulse', 'tokonoma']) {
+  const srcSlugDir = path.join(conceptsSrc, slug);
+  const destSlugDir = path.join(publicDir, slug);
+  copyDirRecursive(srcSlugDir, destSlugDir);
+  const shortHtmlPath = path.join(destSlugDir, 'index.html');
+  if (fs.existsSync(shortHtmlPath)) {
+    const html = fs
+      .readFileSync(shortHtmlPath, 'utf8')
+      .replace('href="../../index.html"', 'href="../masu/index.html"');
+    fs.writeFileSync(shortHtmlPath, html, 'utf8');
+  }
+}
+
+// 4. Copy screenshots/*.png -> docs/public/screenshots/*.png
 const screenshotsSrc = path.join(rootDir, 'screenshots');
 const screenshotsDest = path.join(publicDir, 'screenshots');
 copyDirRecursive(screenshotsSrc, screenshotsDest, (name) => name.endsWith('.png'));
 
-// 4. Copy assets/*.svg -> docs/public/assets/*.svg (if assets/ exists)
+// 5. Copy assets/*.svg -> docs/public/assets/*.svg (if assets/ exists)
 const assetsSrc = path.join(rootDir, 'assets');
 const assetsDest = path.join(publicDir, 'assets');
 if (fs.existsSync(assetsSrc)) {
   copyDirRecursive(assetsSrc, assetsDest, (name) => name.endsWith('.svg'));
 }
 
-console.log('[prepare-public] Synced live demo apps, screenshots, and SVG assets into docs/public/.');
+console.log(
+  '[prepare-public] Synced live demo apps (demo/ + masu/, shiori/, pulse/, tokonoma/), screenshots, and SVG assets into docs/public/.'
+);

@@ -6,7 +6,11 @@
 
 ## `00` 枡 (Masu) — 静謐なグラファイト台帳
 
-- **ライブデモ**: **[00 枡 (Masu) をブラウザで開く ↗](/unslop-kakeibo-showcase/demo/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/index.html" target="_blank" rel="noopener external">00 枡 (Masu) を全画面で開く ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/masu/index.html" target="_blank" rel="noopener external">/masu/index.html ↗</a>
+</div>
+
 - **Character**: `calm, exact, tactile`（静謐、精確、手触りのある質感）
 - **World**: 黒鉛（グラファイト）の筆記具、刷りたての感熱紙レシート、真鍮とブラッシュドメタルの決済カード、日本の木枡（ます）の端正な区切り。
 - **サーフェス配色**:
@@ -34,7 +38,11 @@
 
 ## `01` 家計栞 (Kakei Shiori) — 書斎のコットン紙台帳
 
-- **ライブデモ**: **[01 家計栞 (Kakei Shiori) をブラウザで開く ↗](/unslop-kakeibo-showcase/demo/concepts/shiori/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/shiori/index.html" target="_blank" rel="noopener external">01 家計栞 (Shiori) を全画面で開く ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/shiori/index.html" target="_blank" rel="noopener external">/shiori/index.html ↗</a>
+</div>
+
 - **Character**: `warm, literary, unhurried`（温かみ、書物的、ゆったりとした時間）
 - **World**: 厚手のコットン紙に滲む万年筆のインク、見開き2ページの帳面、真鍮のペーパークリップ、銅版画の植物標本チケット、深紅の布製栞紐。
 - **サーフェス配色**:
@@ -62,7 +70,11 @@
 
 ## `02` パルス (Pulse) — 高精度テレメトリ台帳
 
-- **ライブデモ**: **[02 パルス (Pulse) をブラウザで開く ↗](/unslop-kakeibo-showcase/demo/concepts/pulse/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/pulse/index.html" target="_blank" rel="noopener external">02 パルス (Pulse) を全画面で開く ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/pulse/index.html" target="_blank" rel="noopener external">/pulse/index.html ↗</a>
+</div>
+
 - **Character**: `technical, high-precision, atmospheric`（技術的、高精度、静かな緊張感）
 - **World**: スタジオ音響スペクトラムアナライザ、高精度オシロスコープ、反転フラップ式（パタパタ時計）表示器、黒アルマイト加工の計測パネル。
 - **サーフェス配色**:
@@ -90,7 +102,11 @@
 
 ## `03` 床の間 (Tokonoma) — 建築的スイスグリッド台帳
 
-- **ライブデモ**: **[03 床の間 (Tokonoma) をブラウザで開く ↗](/unslop-kakeibo-showcase/demo/concepts/tokonoma/index.html){target="_blank"}**
+<div class="app-launcher-actions" style="margin: 12px 0 16px;">
+  <a class="app-launch-btn" href="/unslop-kakeibo-showcase/demo/concepts/tokonoma/index.html" target="_blank" rel="noopener external">03 床の間 (Tokonoma) を全画面で開く ↗</a>
+  <a class="app-launch-sub" href="/unslop-kakeibo-showcase/tokonoma/index.html" target="_blank" rel="noopener external">/tokonoma/index.html ↗</a>
+</div>
+
 - **Character**: `architectural, serene, structural`（建築的、静寂、構造美）
 - **World**: 漆喰の白壁、露出する `1px` の建築構造グリッド、日本の「床の間」が持つ余白（間）、そして一点の朱印。
 - **サーフェス配色**:
