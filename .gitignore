@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# VitePress build, cache & generated public copies
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/public/demo/
+docs/public/screenshots/
+docs/public/assets/
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs & temporary capture scripts
+*.log
+npm-debug.log*
+pnpm-debug.log*
+capture*.mjs
+capture*.js
+.playwright-cli/
+tmp/
+temp/

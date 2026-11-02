@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" fill="none">
+  <!-- Outer Masu Box Frame (Dark Graphite Base) -->
+  <rect x="16" y="16" width="224" height="224" rx="32" fill="#141415" />
+  <rect x="24" y="24" width="208" height="208" rx="24" stroke="#2c2c30" stroke-width="4" />
+
+  <!-- Inner Masu Wooden Joint Grid (4 Concept Quadrants) -->
+  <!-- 00 Masu: Tactile Graphite Ledger (#19191b + warm gold accent) -->
+  <rect x="40" y="40" width="82" height="82" rx="12" fill="#19191b" stroke="#34343a" stroke-width="2" />
+  <rect x="54" y="58" width="36" height="24" rx="4" stroke="#ededef" stroke-width="3" />
+  <circle cx="98" cy="98" r="6" fill="#f5b82e" />
+
+  <!-- 01 Kakei Shiori: Botanical Archival Ledger (#1b5e43) -->
+  <rect x="134" y="40" width="82" height="82" rx="12" fill="#1b5e43" />
+  <path d="M164 40V84L175 75L186 84V40" fill="#f7f4ee" />
+  <line x1="152" y1="102" x2="198" y2="102" stroke="#a7d7c5" stroke-width="3" stroke-linecap="round" />
+
+  <!-- 02 Pulse Telemetry: Precision Cashflow OS (#ff5c28) -->
+  <rect x="40" y="134" width="82" height="82" rx="12" fill="#ff5c28" />
+  <path d="M54 184H66L74 156L84 194L92 170L98 184H108" stroke="#0f0f10" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- 03 Tokonoma: Editorial Brutalist Swiss Grid (#d9381e) -->
+  <rect x="134" y="134" width="82" height="82" rx="12" fill="#f4f3ef" />
+  <line x1="134" y1="175" x2="216" y2="175" stroke="#181818" stroke-width="3" />
+  <line x1="175" y1="134" x2="175" y2="175" stroke="#181818" stroke-width="3" />
+  <rect x="184" y="184" width="20" height="20" rx="3" fill="#d9381e" />
+
+  <!-- Center Geometric Masu Intersection Mark -->
+  <rect x="118" y="118" width="20" height="20" rx="4" fill="#ededef" stroke="#141415" stroke-width="4" />
+</svg>
