@@ -1,0 +1,1407 @@
+/* ==========================================================================
+   02 パルス (Pulse) — Deep Ink Precision Cashflow UI
+   - Deep Midnight Ink (#07080d / #0b0d14 / #11141c / #1a1e28) + Signal Orange (#ff5c28)
+   - Moment 1: Interactive 60fps Canvas Glyph Contour Field
+   - Moment 2: Single-Accent 31-Day Impulse & Cumulative Trajectory SVG Chart
+   - Signature: Solari Split-Flap Tabular Cells & 1px Hairline Precision
+   ========================================================================== */
+
+:root {
+  /* --- Strict 4px Spacing Scale --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 28px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* --- Neutral Ramp — Dark Mode (Default: Deep Ink) --- */
+  --bg-deepest: #07080d;
+  --bg-page: #0b0d14;
+  --bg-card: #11141c;
+  --bg-raised: #1a1e28;
+  --bg-elevated: #222736;
+  --bg-hover: rgba(236, 239, 244, 0.04);
+  --bg-backdrop: rgba(4, 5, 9, 0.78);
+
+  /* Slate Steps for Muted Non-Threshold Chart Bars */
+  --slate-bar: #1e2436;
+  --slate-bar-hover: #2c344b;
+  --slate-grid: rgba(236, 239, 244, 0.055);
+
+  /* Borders & Hairlines */
+  --border-hairline: rgba(236, 239, 244, 0.08);
+  --border-strong: rgba(236, 239, 244, 0.15);
+  --highlight-top: inset 0 1px 0 rgba(236, 239, 244, 0.10);
+
+  /* Text Hierarchy */
+  --text-primary: #eceff4;
+  --text-secondary: #9aa3b2;
+  --text-muted: #636c7e;
+
+  /* Primary Signal Accent & Semantic Tokens */
+  --accent-signal: #ff5c28;
+  --accent-signal-soft: rgba(255, 92, 40, 0.14);
+  --accent-signal-border: rgba(255, 92, 40, 0.42);
+
+  --sem-positive: #3dd68c;
+  --sem-positive-soft: rgba(61, 214, 140, 0.12);
+  --sem-negative: #f2555a;
+  --sem-negative-soft: rgba(242, 85, 90, 0.12);
+
+  /* Typography (Weights 400 and 500 ONLY, tabular-nums everywhere) */
+  --font-sans: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', 'Noto Sans JP', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Nested Radii */
+  --r-keycap: 4px;
+  --r-control: 6px;
+  --r-panel: 10px;
+  --r-modal: 14px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med: 200ms;
+
+  /* Shadows */
+  --shadow-panel: var(--highlight-top);
+  --shadow-dock: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(236, 239, 244, 0.11);
+}
+
+/* --- Light Mode ([T] Clean Room Cool Ink) --- */
+html[data-theme="light"] {
+  --bg-deepest: #eef1f6;
+  --bg-page: #f5f7fa;
+  --bg-card: #ffffff;
+  --bg-raised: #eceff4;
+  --bg-elevated: #e2e7f0;
+  --bg-hover: rgba(15, 20, 28, 0.04);
+  --bg-backdrop: rgba(15, 20, 28, 0.42);
+
+  --slate-bar: #d5dce6;
+  --slate-bar-hover: #b8c2d1;
+  --slate-grid: rgba(15, 20, 28, 0.06);
+
+  --border-hairline: rgba(15, 20, 28, 0.08);
+  --border-strong: rgba(15, 20, 28, 0.16);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  --text-primary: #0f141c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  --accent-signal: #e04819;
+  --accent-signal-soft: rgba(224, 72, 25, 0.10);
+  --accent-signal-border: rgba(224, 72, 25, 0.35);
+
+  --sem-positive: #159957;
+  --sem-positive-soft: rgba(21, 153, 87, 0.10);
+  --sem-negative: #d9383a;
+  --sem-negative-soft: rgba(217, 56, 58, 0.10);
+
+  --shadow-panel: 0 1px 2px rgba(15, 20, 28, 0.04), var(--highlight-top);
+  --shadow-dock: 0 12px 32px rgba(15, 20, 28, 0.14), 0 0 0 1px rgba(15, 20, 28, 0.10);
+}
+
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--dur-med) var(--ease-out), color var(--dur-med) var(--ease-out);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mono,
+kbd,
+code,
+time,
+table td,
+table th,
+.solari-cell,
+.inst-solari {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   1. Unified Top Concept Switcher & Action Bar (44px)
+   ========================================================================== */
+.concept-switcher-bar {
+  height: 44px;
+  background-color: var(--bg-deepest);
+  border-bottom: 1px solid var(--border-hairline);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.concept-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.concept-pill {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.concept-pill:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+}
+
+.concept-pill.active {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+  border-color: var(--border-strong);
+  font-weight: 500;
+}
+
+.concept-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-signal);
+}
+
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.cmd-chip {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.cmd-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background-color: var(--bg-elevated);
+}
+
+.btn-signal {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  background-color: var(--accent-signal);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+
+.btn-signal:hover {
+  filter: brightness(1.08);
+}
+
+.keycap {
+  height: 18px;
+  min-width: 18px;
+  padding: 0 4px;
+  border-radius: var(--r-keycap);
+  background-color: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--border-strong);
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-theme="light"] .keycap {
+  background-color: rgba(15, 20, 28, 0.06);
+}
+
+/* ==========================================================================
+   2. Cockpit Shell (56px Left Icon Rail + Main Workspace)
+   ========================================================================== */
+.cockpit-shell {
+  display: flex;
+  min-height: calc(100vh - 44px);
+  width: 100%;
+}
+
+.icon-rail {
+  width: 56px;
+  flex-shrink: 0;
+  background-color: var(--bg-deepest);
+  border-right: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  position: sticky;
+  top: 44px;
+  height: calc(100vh - 44px);
+  z-index: 60;
+}
+
+.rail-brand {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pulse-osc-mark {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 14px;
+}
+
+.pulse-osc-mark span {
+  width: 2px;
+  background-color: var(--accent-signal);
+  border-radius: 1px;
+}
+
+.pulse-osc-mark span:nth-child(1) { height: 6px; opacity: 0.6; }
+.pulse-osc-mark span:nth-child(2) { height: 14px; }
+.pulse-osc-mark span:nth-child(3) { height: 9px; opacity: 0.8; }
+
+.rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+.rail-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  position: relative;
+  border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.rail-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+}
+
+.rail-btn.active {
+  color: var(--accent-signal);
+  background-color: var(--bg-raised);
+  border-color: var(--border-strong);
+  box-shadow: var(--highlight-top);
+}
+
+.rail-btn.active::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background-color: var(--accent-signal);
+  border-radius: 0 2px 2px 0;
+}
+
+.rail-tooltip {
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  background-color: var(--bg-deepest);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  padding: 4px 8px;
+  border-radius: var(--r-keycap);
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--shadow-dock);
+}
+
+.rail-btn:hover .rail-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.rail-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ==========================================================================
+   3. Workspace & Bento Grid (Generous Breathing Space)
+   ========================================================================== */
+.telemetry-workspace {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 80px;
+}
+
+.bento-deck {
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.col-span-12 { grid-column: span 12; }
+.col-span-8  { grid-column: span 8; }
+.col-span-4  { grid-column: span 4; }
+
+.panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-panel);
+  box-shadow: var(--shadow-panel);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.panel-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Segmented Controls */
+.seg-group {
+  display: inline-flex;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 2px;
+  gap: 2px;
+}
+
+.seg-btn {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  transition: all var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.seg-btn:hover {
+  color: var(--text-primary);
+}
+
+.seg-btn.active {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  font-weight: 500;
+  box-shadow: var(--highlight-top);
+}
+
+/* ==========================================================================
+   4. ROW 1: HERO PANEL (KPI Readouts + Moment 1 Glyph Canvas)
+   ========================================================================== */
+.hero-split {
+  display: grid;
+  grid-template-columns: 42fr 58fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.hero-readout-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hero-month-heading {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* Solari Split-Flap Counter Block */
+.solari-block {
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 16px 18px;
+}
+
+.solari-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.solari-strip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: nowrap;
+}
+
+.solari-cell {
+  width: 36px;
+  height: 48px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--bg-raised) 0%, var(--bg-raised) 49%, var(--bg-deepest) 50%, var(--bg-card) 100%);
+  border: 1px solid var(--border-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 4px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  position: relative;
+}
+
+.solari-cell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+.solari-cell.currency {
+  color: var(--accent-signal);
+  width: 32px;
+}
+
+.solari-sep {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--text-muted);
+  padding: 0 1px;
+  align-self: flex-end;
+  margin-bottom: 6px;
+}
+
+.delta-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.delta-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--r-keycap);
+}
+
+.delta-badge.positive {
+  color: var(--sem-positive);
+  background-color: var(--sem-positive-soft);
+}
+
+.delta-badge.negative {
+  color: var(--sem-negative);
+  background-color: var(--sem-negative-soft);
+}
+
+/* 2 Sub-Instruments Grid (純貯蓄 & 日次ペース) */
+.sub-instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.instrument-cell {
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 14px 16px;
+}
+
+.inst-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.inst-solari {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.inst-solari small {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.inst-delta {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.inst-delta .positive {
+  color: var(--sem-positive);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.inst-delta .negative {
+  color: var(--sem-negative);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+/* --- Right: MOMENT 1 — Interactive 60fps Canvas Glyph Stage --- */
+.hero-canvas-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-Stage {
+  position: relative;
+  flex: 1;
+  min-height: 268px;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  overflow: hidden;
+}
+
+#glyph-matrix-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+.canvas-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+}
+
+/* Floating Pinned Callouts (2 Strictly Selected Tags) */
+.glyph-pin {
+  position: absolute;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--r-control);
+  font-size: 12px;
+  background-color: rgba(11, 13, 20, 0.88);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+html[data-theme="light"] .glyph-pin {
+  background-color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 18px rgba(15, 20, 28, 0.12);
+}
+
+.pin-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.pin-orange {
+  border-color: var(--accent-signal-border);
+}
+.pin-orange .pin-dot {
+  background-color: var(--accent-signal);
+}
+.pin-orange .pin-val {
+  color: var(--accent-signal);
+  font-weight: 500;
+}
+
+.pin-emerald .pin-dot {
+  background-color: var(--sem-positive);
+}
+.pin-emerald .pin-val {
+  color: var(--sem-positive);
+  font-weight: 500;
+}
+
+.pin-key {
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   5. ROW 2: MOMENT 2 — 日次支出の推移 + 費目別の消化状況
+   ========================================================================== */
+.horizon-svg-wrap {
+  position: relative;
+  width: 100%;
+  height: 248px;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 8px 4px 4px;
+}
+
+.horizon-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.horizon-tooltip {
+  position: absolute;
+  top: 10px;
+  left: 56px;
+  z-index: 10;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  padding: 6px 10px;
+  border-radius: var(--r-keycap);
+  font-size: 11px;
+  color: var(--text-primary);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  box-shadow: var(--shadow-dock);
+}
+
+.horizon-tooltip.visible {
+  opacity: 1;
+}
+
+/* 費目別の消化状況 (Single-Line Clean Rows) */
+.allocation-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 8px;
+}
+
+.alloc-row {
+  width: 100%;
+  height: 42px;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 0 14px;
+  display: grid;
+  grid-template-columns: 10px 64px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.alloc-row.fixed-item-row {
+  grid-template-columns: 10px minmax(110px, 1.2fr) 1fr auto;
+}
+
+.alloc-row:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-raised);
+}
+
+.alloc-row.active {
+  border-color: var(--accent-signal);
+  background-color: var(--accent-signal-soft);
+}
+
+.alloc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+}
+
+.alloc-dot.signal,
+.alloc-row.active .alloc-dot {
+  background-color: var(--accent-signal);
+}
+
+.alloc-dot.positive {
+  background-color: var(--sem-positive);
+}
+
+.alloc-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alloc-bar-track {
+  height: 3px;
+  background-color: var(--bg-raised);
+  border-radius: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.alloc-bar-fill {
+  height: 100%;
+  background-color: var(--text-secondary);
+  border-radius: 2px;
+  transition: width var(--dur-med) var(--ease-out);
+}
+
+.alloc-bar-fill.signal,
+.alloc-row.active .alloc-bar-fill {
+  background-color: var(--accent-signal);
+}
+
+.alloc-amount {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   6. ROW 3: 入出金明細 + 取引詳細パネル
+   ========================================================================== */
+.stream-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  height: 32px;
+  width: 220px;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.search-box:focus-within {
+  border-color: var(--accent-signal);
+  color: var(--text-primary);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.chip-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: var(--r-keycap);
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.filter-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.filter-chip.active {
+  background-color: var(--accent-signal-soft);
+  border-color: var(--accent-signal-border);
+  color: var(--accent-signal);
+  font-weight: 500;
+}
+
+.table-container {
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  background-color: var(--bg-deepest);
+  overflow-x: auto;
+}
+
+.telemetry-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.telemetry-table th {
+  height: 34px;
+  padding: 0 14px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-hairline);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.telemetry-table th.sortable {
+  cursor: pointer;
+}
+
+.telemetry-table th.sortable:hover {
+  color: var(--text-primary);
+}
+
+.telemetry-table td {
+  height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border-hairline);
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.telemetry-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.telemetry-table tbody tr {
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.telemetry-table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.telemetry-table tbody tr.selected {
+  background-color: var(--bg-raised);
+}
+
+.telemetry-table tbody tr.selected td:first-child {
+  box-shadow: inset 2px 0 0 var(--accent-signal);
+}
+
+.col-amt {
+  text-align: right;
+}
+
+.tx-merchant-cell {
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tx-merchant-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.tx-merchant-memo {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.channel-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-keycap);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.amt-spike {
+  color: var(--accent-signal);
+  font-weight: 500;
+}
+
+.amt-income {
+  color: var(--sem-positive);
+  font-weight: 500;
+}
+
+/* --- 取引詳細パネル (Right 4 Columns) --- */
+.inspector-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.voucher-card {
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.voucher-head {
+  border-bottom: 1px solid var(--border-hairline);
+  padding-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.voucher-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.voucher-amount-hero {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.voucher-kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 12px;
+  font-size: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.v-kv span:first-child {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+.v-kv span:last-child {
+  color: var(--text-primary);
+}
+
+.voucher-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.voucher-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.voucher-line span:last-child {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.voucher-footer-actions {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-hairline);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-delete-tx {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-keycap);
+  background-color: transparent;
+  border: 1px solid var(--border-hairline);
+  color: var(--text-muted);
+  font-size: 11px;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.btn-delete-tx:hover {
+  color: var(--sem-negative);
+  border-color: var(--sem-negative);
+  background-color: var(--sem-negative-soft);
+}
+
+.raw-json-pre {
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 14px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--sem-positive);
+  overflow-x: auto;
+  flex: 1;
+}
+
+/* ==========================================================================
+   7. SUBTLE FLOATING DOCK (Minimal Japanese Pills)
+   ========================================================================== */
+.floating-command-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  height: 40px;
+  padding: 0 8px;
+  background-color: rgba(7, 8, 13, 0.90);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  box-shadow: var(--shadow-dock);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+html[data-theme="light"] .floating-command-bar {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+.dock-action {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.dock-action:hover {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+}
+
+.dock-action.primary {
+  background-color: var(--accent-signal-soft);
+  border: 1px solid var(--accent-signal-border);
+  color: var(--accent-signal);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   8. MODAL DIALOG ([N] 新規記帳)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-backdrop);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-modal);
+  box-shadow: var(--shadow-dock);
+  padding: 20px 24px;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.field-input {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.field-input:focus {
+  border-color: var(--accent-signal);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   9. REDLINE X-RAY MODE ([U]) & AI SLOP COMPARISON MODE ([B])
+   ========================================================================== */
+.xray-banner,
+.slop-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 28px;
+  font-size: 12px;
+}
+
+body.xray-active .xray-banner {
+  display: flex;
+  background-color: rgba(255, 92, 40, 0.14);
+  border-bottom: 1px solid var(--accent-signal);
+  color: var(--text-primary);
+}
+
+body.xray-active [data-xray] {
+  outline: 1px dashed var(--accent-signal) !important;
+  position: relative;
+}
+
+body.xray-active [data-xray]::after {
+  content: attr(data-xray);
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  z-index: 80;
+  background-color: var(--accent-signal);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 14px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.xray-active .icon-rail[data-xray]::after {
+  top: 10px;
+  left: 60px;
+  right: auto;
+}
+
+body.xray-active .solari-strip[data-xray]::after {
+  top: -19px;
+  left: 0;
+  right: auto;
+}
+
+body.xray-active .floating-command-bar[data-xray]::after {
+  top: -22px;
+  right: 12px;
+}
+
+body.xray-active .btn-signal[data-xray]::after {
+  display: none;
+}
+
+/* AI Slop Comparison Mode ([B]) */
+body.slop-active .slop-banner {
+  display: flex;
+  background: linear-gradient(90deg, #7c3aed, #2563eb, #06b6d4);
+  color: #ffffff;
+}
+
+body.slop-active .panel {
+  border-radius: 24px !important;
+  border: 1px solid rgba(139, 92, 246, 0.5) !important;
+  box-shadow: 0 0 32px rgba(139, 92, 246, 0.25) !important;
+  background: linear-gradient(145deg, #161233 0%, #0f172a 100%) !important;
+}
+
+body.slop-active .hero-month-heading,
+body.slop-active .panel-title {
+  background: linear-gradient(90deg, #c084fc, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   10. Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .hero-split {
+    grid-template-columns: 1fr;
+  }
+  .col-span-8,
+  .col-span-4 {
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .concept-switcher-bar {
+    overflow-x: auto;
+    gap: 12px;
+  }
+  .bento-deck {
+    padding: 16px;
+  }
+  .sub-instruments-grid,
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,1439 @@
+/* ==========================================================================
+   家計栞 — Warm Botanical Archival Ledger
+   引き算の美学・余白の拡大・100%洗練された日本語UI
+   Design principles based on unslop by Damir Sokolovsky (@heydamir) — CC BY 4.0
+   ========================================================================== */
+
+:root {
+  /* --- Pass 1: 4px Spacing Scale --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 28px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* --- Pass 2: Neutral Ramp — Default Light Mode (Warm Cotton Paper) --- */
+  --bg-deepest: #efeae1;
+  --bg-page: #f7f4ee;
+  --bg-card: #fdfbf7;
+  --bg-raised: #eae3d7;
+  --bg-voucher: #f5efe2;
+  --bg-hover: rgba(28, 25, 23, 0.035);
+  --bg-modal-backdrop: rgba(28, 25, 23, 0.42);
+
+  --border-hairline: rgba(28, 25, 23, 0.085);
+  --border-strong: rgba(28, 25, 23, 0.15);
+  --border-ruled: rgba(28, 25, 23, 0.075);
+  --ledger-margin-line: rgba(184, 74, 57, 0.22);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #8a847c;
+
+  /* Fountain Pen Inks & Seals */
+  --accent-ink: #1b5e43;
+  --accent-ink-soft: rgba(27, 94, 67, 0.09);
+  --accent-ink-border: rgba(27, 94, 67, 0.26);
+  --sub-accent: #b84a39;
+  --sub-accent-soft: rgba(184, 74, 57, 0.10);
+  --cobalt-ink: #234b6e;
+
+  /* Chart Hatching Neutral Tones (Moment 2) */
+  --chart-stone-fill: #dfd9ce;
+  --chart-stone-stroke: #b7afa1;
+  --chart-bright-fill: #1b5e43;
+  --chart-bright-stroke: #12422e;
+  --chart-grid: rgba(28, 25, 23, 0.065);
+
+  /* 5 Category Colors (Muted Botanical Inks) */
+  --env-housing: #9a6b26;
+  --env-food: #1b5e43;
+  --env-culture: #234b6e;
+  --env-transit: #b84a39;
+  --env-special: #6b4c7a;
+
+  /* Primary Button */
+  --btn-primary-bg: #1b5e43;
+  --btn-primary-fg: #fdfbf7;
+  --btn-primary-hover: #144933;
+
+  /* --- Pass 5: Typography --- */
+  --font-serif: 'Shippori Mincho', 'Newsreader', Georgia, serif;
+  --font-sans: 'Noto Sans JP', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Pass 7: Nested Radii --- */
+  --r-keycap: 4px;
+  --r-control: 6px;
+  --r-card: 10px;
+  --r-book: 12px;
+  --r-modal: 16px;
+
+  /* --- Pass 9: Motion --- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med: 220ms;
+
+  /* Book Spread Shadows */
+  --shadow-sheet:
+    0 1px 2px rgba(28, 25, 23, 0.04),
+    0 8px 24px rgba(28, 25, 23, 0.035);
+  --shadow-book-spread:
+    0 2px 4px rgba(28, 25, 23, 0.045),
+    0 16px 40px rgba(28, 25, 23, 0.055),
+    3px 4px 0 #ebe5da,
+    6px 8px 0 #ded7ca;
+  --shadow-modal:
+    0 20px 48px rgba(28, 25, 23, 0.22),
+    0 0 0 1px rgba(28, 25, 23, 0.12);
+}
+
+/* ==========================================================================
+   Dark Mode: Midnight Library / Espresso Ink ([T] Toggle)
+   ========================================================================== */
+html[data-theme="dark"] {
+  --bg-deepest: #11100e;
+  --bg-page: #161513;
+  --bg-card: #1c1a18;
+  --bg-raised: #262421;
+  --bg-voucher: #221f1c;
+  --bg-hover: rgba(237, 232, 224, 0.04);
+  --bg-modal-backdrop: rgba(8, 8, 7, 0.72);
+
+  --border-hairline: rgba(237, 232, 224, 0.085);
+  --border-strong: rgba(237, 232, 224, 0.15);
+  --border-ruled: rgba(237, 232, 224, 0.07);
+  --ledger-margin-line: rgba(224, 109, 83, 0.24);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --text-primary: #ede8e0;
+  --text-secondary: #a8a096;
+  --text-muted: #787167;
+
+  --accent-ink: #4cc38a;
+  --accent-ink-soft: rgba(76, 195, 138, 0.12);
+  --accent-ink-border: rgba(76, 195, 138, 0.30);
+  --sub-accent: #e06d53;
+  --sub-accent-soft: rgba(224, 109, 83, 0.14);
+  --cobalt-ink: #7aa6d6;
+
+  --chart-stone-fill: #2c2925;
+  --chart-stone-stroke: #575148;
+  --chart-bright-fill: #3dd68c;
+  --chart-bright-stroke: #6ee7b7;
+  --chart-grid: rgba(237, 232, 224, 0.07);
+
+  --env-housing: #d9a441;
+  --env-food: #3dd68c;
+  --env-culture: #689cd2;
+  --env-transit: #e06d53;
+  --env-special: #b088c4;
+
+  --btn-primary-bg: #3dd68c;
+  --btn-primary-fg: #11100e;
+  --btn-primary-hover: #57e09e;
+
+  --shadow-sheet:
+    0 2px 8px rgba(0, 0, 0, 0.32);
+  --shadow-book-spread:
+    0 12px 36px rgba(0, 0, 0, 0.48),
+    3px 4px 0 #141311,
+    6px 8px 0 #0e0d0c;
+  --shadow-modal:
+    0 24px 56px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(237, 232, 224, 0.14);
+}
+
+/* ==========================================================================
+   Base & Reset (Weights 400 & 500 only; tabular-nums enforced)
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--dur-med) var(--ease-out), color var(--dur-med) var(--ease-out);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(28, 25, 23, 0.022) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+
+button, input, select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+strong {
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   SIGNATURE: Hanging Silk Bookmark Ribbon (Top Right — Toggles X-Ray [U])
+   ========================================================================== */
+.bookmark-ribbon {
+  position: fixed;
+  top: 0;
+  right: 24px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: transparent;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
+.bookmark-ribbon:hover {
+  transform: translateY(4px);
+}
+
+body.xray-active .bookmark-ribbon {
+  transform: translateY(8px);
+}
+
+.bookmark-ribbon-cord {
+  width: 2px;
+  height: 6px;
+  background-color: #8c6416;
+}
+
+.bookmark-ribbon-body {
+  width: 28px;
+  padding: 10px 4px 8px;
+  background: linear-gradient(180deg, #164e36 0%, #1b5e43 65%, #134631 100%);
+  color: #f7f4ee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(28, 25, 23, 0.2);
+}
+
+body.xray-active .bookmark-ribbon-body {
+  background: linear-gradient(180deg, #9e2f20 0%, #b84a39 100%);
+}
+
+.bookmark-stitch {
+  position: absolute;
+  inset: 3px 3px 0 3px;
+  border-left: 1px dashed rgba(243, 223, 157, 0.4);
+  border-right: 1px dashed rgba(243, 223, 157, 0.4);
+  pointer-events: none;
+}
+
+.bookmark-kanji {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: #fdfbf7;
+  line-height: 1;
+}
+
+.bookmark-ribbon-tail {
+  width: 28px;
+  height: 10px;
+  background: #134631;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 35%, 0 100%);
+}
+
+body.xray-active .bookmark-ribbon-tail {
+  background: #8f2d1f;
+}
+
+/* ==========================================================================
+   TOP CONCEPT SWITCHER & ACTIONS BAR
+   ========================================================================== */
+.concept-switcher-bar {
+  background-color: var(--bg-deepest);
+  border-bottom: 1px solid var(--border-hairline);
+  height: 44px;
+  padding: 0 68px 0 32px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 20;
+}
+
+.concept-switcher-inner {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.concept-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.concept-link {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  padding: 4px 10px;
+  border-radius: var(--r-keycap);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.concept-link:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-hover);
+}
+
+.concept-link.active {
+  color: var(--accent-ink);
+  background-color: var(--accent-ink-soft);
+  border: 1px solid var(--accent-ink-border);
+  font-weight: 500;
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-action-btn {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.top-action-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.top-action-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-color: transparent;
+  font-weight: 500;
+  padding: 0 12px;
+}
+
+.top-action-primary:hover {
+  background-color: var(--btn-primary-hover);
+  color: var(--btn-primary-fg);
+  border-color: transparent;
+}
+
+.keycap {
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-keycap);
+  background-color: rgba(28, 25, 23, 0.06);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+}
+
+html[data-theme="dark"] .keycap {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================================================
+   MAIN ARCHIVAL SHELL & QUIET MASTHEAD
+   ========================================================================== */
+.archival-shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.quiet-masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-hairline);
+  flex-wrap: wrap;
+}
+
+.masthead-month-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.month-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-keycap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.month-nav-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-hover);
+}
+
+.masthead-month-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* 4 Clean Japanese Tabs */
+.shiori-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.shiori-tab {
+  padding: 6px 16px;
+  border-radius: var(--r-control);
+  color: var(--text-secondary);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.shiori-tab:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-hover);
+}
+
+.shiori-tab.active {
+  color: var(--accent-ink);
+  background-color: var(--accent-ink-soft);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   OPEN BOOK 2-COLUMN SPREAD (Generous Whitespace)
+   ========================================================================== */
+.tab-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-spread {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-book);
+  box-shadow: var(--shadow-book-spread);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1.05fr);
+  position: relative;
+  overflow: hidden;
+}
+
+.book-page {
+  padding: 36px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.page-left {
+  background: linear-gradient(90deg, transparent 0%, rgba(28, 25, 23, 0.012) 96%, rgba(28, 25, 23, 0.04) 100%);
+}
+
+.page-right {
+  background: linear-gradient(270deg, transparent 0%, rgba(28, 25, 23, 0.012) 96%, rgba(28, 25, 23, 0.04) 100%);
+}
+
+/* Center Bookbinding Spine Fold */
+.book-spine {
+  background: linear-gradient(
+    90deg,
+    rgba(28, 25, 23, 0.05) 0%,
+    rgba(28, 25, 23, 0.12) 48%,
+    rgba(255, 255, 255, 0.35) 52%,
+    rgba(28, 25, 23, 0.04) 100%
+  );
+  border-left: 1px solid var(--border-hairline);
+  border-right: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 64px 0;
+}
+
+html[data-theme="dark"] .book-spine {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.65) 50%,
+    rgba(255, 255, 255, 0.05) 54%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+.spine-stitch {
+  width: 2px;
+  height: 28px;
+  background-color: var(--sub-accent);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+
+.archival-rule {
+  border: none;
+  border-top: 1px solid var(--border-hairline);
+  margin: 0;
+}
+
+/* ==========================================================================
+   LEFT PAGE TOP: 2 QUIET HERO STATS + MOMENT 1 COPPERPLATE TICKET
+   ========================================================================== */
+.left-hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.hero-stats-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.quiet-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-caption {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.stat-amount {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.stat-delta {
+  font-size: 12px;
+  color: var(--accent-ink);
+  font-weight: 500;
+}
+
+.stat-delta.warning {
+  color: var(--sub-accent);
+}
+
+/* Moment 1: Copperplate Botanical Voucher + Brass Paperclip */
+.voucher-ticket {
+  width: 100%;
+  background-color: var(--bg-voucher);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-control);
+  padding: 8px;
+  position: relative;
+  box-shadow:
+    0 6px 20px rgba(28, 25, 23, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.brass-paperclip-assembly {
+  position: absolute;
+  top: -14px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.voucher-silk-ribbon {
+  width: 12px;
+  height: 40px;
+  background: linear-gradient(180deg, #12422e 0%, #1b5e43 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  box-shadow: 0 3px 6px rgba(28, 25, 23, 0.22);
+  margin-top: 4px;
+}
+
+.brass-clip-svg {
+  display: block;
+}
+
+.voucher-inner-frame {
+  border: 1px double var(--border-strong);
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.engraving-plate {
+  width: 100%;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: 3px;
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+.engraving-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==========================================================================
+   SPREAD BLOCKS & MOMENT 2: MONTHLY CHART
+   ========================================================================== */
+.spread-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.block-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.chart-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch-bright {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background-color: var(--chart-bright-fill);
+}
+
+.swatch-hatched {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--chart-stone-fill),
+    var(--chart-stone-fill) 2px,
+    var(--chart-stone-stroke) 2px,
+    var(--chart-stone-stroke) 3px
+  );
+  border: 1px solid var(--chart-stone-stroke);
+}
+
+.swatch-terracotta {
+  width: 12px;
+  height: 2px;
+  background-color: var(--sub-accent);
+  border-radius: 2px;
+}
+
+.seasonal-chart-stage {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 16px 16px 12px;
+}
+
+.seasonal-svg {
+  width: 100%;
+  height: 184px;
+  display: block;
+  overflow: visible;
+}
+
+.chart-bar-group {
+  cursor: pointer;
+}
+
+.chart-bar-group:hover rect.bar-main {
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   LEFT PAGE BOTTOM: 5 SINGLE-LINE ENVELOPE BARS
+   ========================================================================== */
+.btn-text-link {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: var(--r-keycap);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+
+.btn-text-link:hover {
+  color: var(--accent-ink);
+  background-color: var(--accent-ink-soft);
+}
+
+.envelope-bookmarks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.envelope-row-item {
+  display: grid;
+  grid-template-columns: 72px 1fr 88px;
+  align-items: center;
+  gap: 16px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.envelope-row-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.envelope-row-item.active {
+  background-color: var(--accent-ink-soft);
+}
+
+.envelope-label-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.category-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.envelope-name {
+  font-size: 13.5px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.envelope-bar-track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--bg-raised);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.envelope-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width var(--dur-med) var(--ease-out);
+}
+
+.envelope-amount {
+  text-align: right;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   RIGHT PAGE: RULED LEDGER TABLE (4 Columns, 44px Row Height)
+   ========================================================================== */
+.ledger-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-field-wrap {
+  height: 32px;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.search-field-wrap:focus-within {
+  border-color: var(--accent-ink);
+}
+
+.ledger-search-input {
+  width: 132px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.ledger-search-input:focus {
+  outline: none;
+}
+
+.ledger-select {
+  height: 32px;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 0 10px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.ruled-table-container {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  overflow-x: auto;
+}
+
+.ruled-ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13.5px;
+}
+
+.ruled-ledger-table thead th {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-strong);
+  background-color: var(--bg-deepest);
+  white-space: nowrap;
+}
+
+.ruled-ledger-table tbody tr {
+  height: 44px;
+  border-bottom: 1px solid var(--border-ruled);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.ruled-ledger-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ruled-ledger-table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.ruled-ledger-table tbody tr.selected {
+  background-color: var(--accent-ink-soft);
+}
+
+.ruled-ledger-table td {
+  padding: 0 14px;
+  vertical-align: middle;
+}
+
+.col-date {
+  width: 68px;
+  border-right: 3px double var(--ledger-margin-line);
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.col-amount {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.tx-merchant-name {
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.tx-category-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   RIGHT PAGE BOTTOM: QUIET WASHI RECEIPT PREVIEW
+   ========================================================================== */
+.washi-receipt-preview {
+  background-color: var(--bg-voucher);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.washi-receipt-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-hairline);
+  padding-bottom: 12px;
+}
+
+.washi-shop-group {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.washi-shop-name {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.washi-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.washi-amount {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.washi-memo-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.washi-fountain-memo {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--cobalt-ink);
+  line-height: 1.6;
+}
+
+.btn-delete-quiet {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: var(--r-keycap);
+  flex-shrink: 0;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.btn-delete-quiet:hover {
+  color: var(--sub-accent);
+}
+
+/* ==========================================================================
+   SECONDARY TABS (費目の栞, 歳時記, 設計仕様) & BUTTONS
+   ========================================================================== */
+.btn {
+  height: 32px;
+  padding: 0 14px;
+  border-radius: var(--r-control);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.btn-secondary {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.single-sheet-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-book);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-book-spread);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.sheet-heading {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.sheet-prose {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.envelopes-folio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.envelope-folio-card {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cap-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.cap-input {
+  width: 112px;
+  height: 30px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-keycap);
+  padding: 0 8px;
+  text-align: right;
+  font-size: 13px;
+}
+
+.almanac-entries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.almanac-card {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.almanac-kigo {
+  font-size: 12px;
+  color: var(--accent-ink);
+}
+
+.almanac-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.almanac-body {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.spec-documentation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.spec-card {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   QUIET FOOTER
+   ========================================================================== */
+.archival-footer {
+  padding: 12px 4px 0;
+  border-top: 1px solid var(--border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.archival-footer a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   MODAL: NEW LEDGER ENTRY
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 460px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-modal);
+  padding: 28px;
+  box-shadow: var(--shadow-modal);
+  transform: translateY(8px);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
+.modal-backdrop.open .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.archival-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.field-input {
+  height: 36px;
+  padding: 0 12px;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-control);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--accent-ink);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   X-RAY REDLINE AUDIT OVERLAY ([U])
+   ========================================================================== */
+.xray-banner {
+  display: none;
+  background-color: #2b1612;
+  color: #ffd7ce;
+  border-bottom: 1px solid rgba(224, 109, 83, 0.45);
+  padding: 8px 32px;
+  font-size: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+body.xray-active .xray-banner {
+  display: flex;
+}
+
+.banner-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.xray-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #e06d53;
+}
+
+[data-xray] {
+  position: relative;
+}
+
+body.xray-active [data-xray] {
+  outline: 1px dashed rgba(184, 74, 57, 0.72);
+  outline-offset: -1px;
+}
+
+body.xray-active [data-xray]::after {
+  content: attr(data-xray);
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #b84a39;
+  color: #fdfbf7;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 60;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+}
+
+body.xray-active [data-xray-pos="bottom-left"]::after {
+  top: auto;
+  right: auto;
+  bottom: 4px;
+  left: 4px;
+}
+
+body.xray-active [data-xray-pos="top-left"]::after {
+  top: 4px;
+  right: auto;
+  left: 4px;
+}
+
+/* ==========================================================================
+   AI SLOP COMPARISON MODE ([B])
+   ========================================================================== */
+.slop-comparison-banner {
+  display: none;
+  background: linear-gradient(90deg, #581c87 0%, #1e3a8a 100%);
+  color: #ffffff;
+  padding: 10px 32px;
+  font-size: 12.5px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.slop-mode .slop-comparison-banner {
+  display: flex;
+}
+
+body.slop-mode {
+  background: linear-gradient(135deg, #2e1065 0%, #0f172a 100%) !important;
+  color: #f3e8ff !important;
+}
+
+body.slop-mode .book-spread,
+body.slop-mode .single-sheet-card {
+  background: linear-gradient(125deg, rgba(88, 28, 135, 0.78), rgba(30, 58, 138, 0.78)) !important;
+  border: 2px solid rgba(192, 132, 252, 0.65) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 0 36px rgba(168, 85, 247, 0.55) !important;
+}
+
+body.slop-mode .masthead-month-title,
+body.slop-mode .stat-amount {
+  background: linear-gradient(90deg, #f0abfc, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  font-weight: 800 !important;
+}
+
+body.slop-mode .top-action-primary,
+body.slop-mode .shiori-tab.active {
+  background: linear-gradient(90deg, #a855f7, #3b82f6) !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.8) !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1100px) {
+  .book-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .book-spine {
+    height: 16px;
+    padding: 0 32px;
+    flex-direction: row;
+  }
+
+  .spine-stitch {
+    width: 28px;
+    height: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .archival-shell {
+    padding: 16px;
+  }
+
+  .book-page {
+    padding: 24px 20px;
+  }
+
+  .left-hero-section,
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .concept-switcher-bar {
+    padding: 8px 16px;
+    height: auto;
+  }
+
+  .concept-switcher-inner {
+    flex-wrap: wrap;
+  }
+}

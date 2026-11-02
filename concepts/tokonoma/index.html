@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>床の間 — 家計月次明細</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500&family=Shippori+Mincho:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- =================================================================
+         最上部スイッチャーバー
+         ================================================================= -->
+    <header
+      class="concept-switcher-bar"
+      aria-label="コンセプト切替"
+      data-xray="40px スイッチャーバー · 1px スイスグリッド"
+      data-xray-pos="bottom-left"
+    >
+      <div class="concept-bar-left">
+        <nav class="concept-tabs" aria-label="デザインコンセプト">
+          <a href="../../index.html" class="concept-tab">
+            <span class="mono-num">00</span>
+            <span>枡</span>
+          </a>
+          <a href="../shiori/index.html" class="concept-tab">
+            <span class="mono-num">01</span>
+            <span>家計栞</span>
+          </a>
+          <a href="../pulse/index.html" class="concept-tab">
+            <span class="mono-num">02</span>
+            <span>パルス</span>
+          </a>
+          <a href="../tokonoma/index.html" class="concept-tab active" aria-current="page">
+            <span class="mono-num">03</span>
+            <span>床の間</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="concept-bar-right">
+        <div class="toolbar-utilities">
+          <button
+            type="button"
+            class="util-btn"
+            id="btn-xray-toggle"
+            title="赤入れ検証表示の切替 [U]"
+          >
+            <span>赤入れ検証</span>
+            <span class="keycap">U</span>
+          </button>
+
+          <button
+            type="button"
+            class="util-btn"
+            id="btn-slop-toggle"
+            title="スロップ比較の切替 [B]"
+            data-xray="スロップ比較トグル"
+            data-xray-pos="bottom-right"
+          >
+            <span id="slop-btn-label">スロップ比較</span>
+            <span class="keycap">B</span>
+          </button>
+
+          <button
+            type="button"
+            class="util-btn"
+            id="btn-theme-toggle"
+            title="配色の切替 [T]"
+          >
+            <span id="theme-btn-label">配色</span>
+            <span class="keycap">T</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-primary-bar"
+            id="btn-new-entry"
+            title="新規記帳 [N]"
+            data-xray="主アクション · 墨塗りボタン"
+            data-xray-pos="bottom-right"
+          >
+            <span id="primary-cta-label">+ 記帳</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- スロップ比較モード時のみ表示される監査バナー -->
+    <section class="slop-audit-banner" id="slop-audit-banner" hidden>
+      <div class="slop-audit-inner">
+        <div class="slop-audit-title">
+          <span class="slop-pill">スロップ比較モード</span>
+          <strong>典型的なAI生成テンプレートの過剰装飾と、「床の間」による引き算の対比：</strong>
+        </div>
+        <div class="slop-audit-grid">
+          <div class="slop-audit-item">
+            <span class="mono">余白とグリッド</span>
+            <p>浮遊する角丸カードや無意味な隙間を排し、1pxの罫線と静かな余白で空間を仕切ります。</p>
+          </div>
+          <div class="slop-audit-item">
+            <span class="mono">色彩の抑制</span>
+            <p>ネオン紫・シアンのグラデーションを排し、漆喰の白・墨色・一滴の朱印のみに絞ります。</p>
+          </div>
+          <div class="slop-audit-item">
+            <span class="mono">言葉と文字組</span>
+            <p>日英の二重表記や図面コード、煽り文句を撤去し、明朝体と等幅数字の佇まいだけで語らせます。</p>
+          </div>
+          <div class="slop-audit-item">
+            <span class="mono">主役の厳選</span>
+            <p>月次ステートメントの朱印と、5区画の「暮らしの配分」の2つだけを主役に据えます。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         メイン 1px グリッドシート
+         ================================================================= -->
+    <main class="swiss-sheet" id="swiss-sheet">
+      <!-- ---------------------------------------------------------------
+           上段: 月次ステートメント＆朱印 (左) + 暮らしの配分 (右)
+           --------------------------------------------------------------- -->
+      <section class="grid-row moments-row">
+        <!-- =============================================================
+             上段左: 月次ステートメント ＆ 朱印（4要素のみ・豊かな余白）
+             ============================================================= -->
+        <article
+          class="grid-cell statement-moment-cell"
+          data-xray="月次ステートメント · 明朝体ディスプレイ + 朱印"
+          data-xray-pos="top-left"
+        >
+          <div class="tokonoma-statement-space">
+            <!-- ① 控えめな年月見出し -->
+            <p class="statement-period-heading" id="main-headline-text">2026年 10月</p>
+
+            <!-- ② 大判セリフ体の今月の支出 ＆ 先月比 -->
+            <div class="statement-main-figure">
+              <span class="statement-label">今月の支出</span>
+              <div class="statement-amount-row">
+                <span class="serif-display" id="stat-total-spent">¥248,620</span>
+                <span class="statement-delta positive mono" id="stat-spent-delta">-8.4% 先月比</span>
+              </div>
+            </div>
+
+            <!-- ③ 純貯蓄 ＆ 貯蓄率 + ④ 朱印スタンプ -->
+            <div class="statement-bottom-row">
+              <div class="statement-savings-block">
+                <span class="statement-label">純貯蓄</span>
+                <div class="statement-savings-figures">
+                  <span class="serif-sub-display" id="stat-net-saved">¥196,380</span>
+                  <span class="reserve-badge mono" id="stat-savings-rate">貯蓄率 44.1%</span>
+                </div>
+              </div>
+
+              <!-- ④ 朱印スタンプ（クリックで押印） -->
+              <div class="hanko-column">
+                <button
+                  type="button"
+                  class="hanko-seal-btn is-stamped"
+                  id="btn-hanko-seal"
+                  aria-pressed="true"
+                  title="クリックして朱印を押印・解除 [H]"
+                  data-xray="朱印オブジェクト (#d9381e)"
+                  data-xray-pos="bottom-right"
+                >
+                  <svg
+                    class="hanko-svg"
+                    viewBox="0 0 120 120"
+                    width="96"
+                    height="96"
+                    aria-label="検・令和八年神無月 収支均衡 角印"
+                  >
+                    <defs>
+                      <filter id="hanko-roughness" x="-5%" y="-5%" width="110%" height="110%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.18" numOctaves="2" result="noise" />
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G" />
+                      </filter>
+                    </defs>
+                    <g filter="url(#hanko-roughness)" class="hanko-ink-group">
+                      <rect x="6" y="6" width="108" height="108" rx="2" fill="none" stroke="currentColor" stroke-width="4.5" />
+                      <rect x="11" y="11" width="98" height="98" rx="1" fill="none" stroke="currentColor" stroke-width="1.2" />
+                      <line x1="44" y1="11" x2="44" y2="109" stroke="currentColor" stroke-width="1.5" />
+                      <line x1="76" y1="11" x2="76" y2="109" stroke="currentColor" stroke-width="1.5" />
+                      <text x="92" y="32" text-anchor="middle" class="hanko-char-lg">検</text>
+                      <text x="92" y="54" text-anchor="middle" class="hanko-char-sm">令</text>
+                      <text x="92" y="70" text-anchor="middle" class="hanko-char-sm">和</text>
+                      <text x="92" y="86" text-anchor="middle" class="hanko-char-sm">八</text>
+                      <text x="92" y="102" text-anchor="middle" class="hanko-char-sm">年</text>
+                      <text x="60" y="34" text-anchor="middle" class="hanko-char-md">神</text>
+                      <text x="60" y="57" text-anchor="middle" class="hanko-char-md">無</text>
+                      <text x="60" y="80" text-anchor="middle" class="hanko-char-md">月</text>
+                      <text x="60" y="101" text-anchor="middle" class="hanko-char-sm">印</text>
+                      <text x="27" y="34" text-anchor="middle" class="hanko-char-md">収</text>
+                      <text x="27" y="56" text-anchor="middle" class="hanko-char-md">支</text>
+                      <text x="27" y="78" text-anchor="middle" class="hanko-char-md">均</text>
+                      <text x="27" y="100" text-anchor="middle" class="hanko-char-md">衡</text>
+                    </g>
+                  </svg>
+                  <span class="hanko-caption" id="hanko-status-label">検印済</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- =============================================================
+             上段右: 暮らしの配分（5区画のシンプルな間取り図）
+             ============================================================= -->
+        <article
+          class="grid-cell treemap-moment-cell"
+          data-xray="暮らしの配分 · 5区画の間取り図"
+          data-xray-pos="top-right"
+        >
+          <div class="cell-header-strip">
+            <h2 class="cell-title">暮らしの配分</h2>
+
+            <div
+              class="treemap-mode-tabs"
+              role="tablist"
+              aria-label="配分の表示切替"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected="true"
+                class="mode-tab active"
+                data-mode="actual"
+              >
+                今月の配分
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected="false"
+                class="mode-tab"
+                data-mode="target"
+              >
+                理想の配分
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected="false"
+                class="mode-tab"
+                data-mode="prev"
+              >
+                先月との比較
+              </button>
+            </div>
+          </div>
+
+          <!-- 5区画の間取り図（部屋名・金額・比率の3要素のみ） -->
+          <div class="floorplan-stage" id="floorplan-stage">
+            <!-- 左棟: 支出 4区画 (55.9%) -->
+            <div class="floorplan-occupied-wing" id="floorplan-occupied-wing" style="width: 55.9%">
+              <!-- 1. 住居 (26.5%) -->
+              <button
+                type="button"
+                class="room-cell room-housing"
+                data-room="housing"
+                id="room-cell-housing"
+                style="height: 47.4%"
+              >
+                <span class="room-name-jp">住居</span>
+                <div class="room-bottom-figures">
+                  <span class="room-amount mono" id="room-amt-housing">¥118,000</span>
+                  <span class="room-ratio mono" id="room-dim-housing">26.5%</span>
+                </div>
+              </button>
+
+              <!-- 下層: 食と器 + (知性と文化 / 移動と交際) -->
+              <div class="floorplan-lower-wing" id="floorplan-lower-wing" style="height: 52.6%">
+                <!-- 2. 食と器 (14.8%) -->
+                <button
+                  type="button"
+                  class="room-cell room-food"
+                  data-room="food"
+                  id="room-cell-food"
+                  style="width: 50.4%"
+                >
+                  <span class="room-name-jp">食と器</span>
+                  <div class="room-bottom-figures">
+                    <span class="room-amount mono" id="room-amt-food">¥65,860</span>
+                    <span class="room-ratio mono" id="room-dim-food">14.8%</span>
+                  </div>
+                </button>
+
+                <!-- 右下スタック: 知性と文化 + 移動と交際 -->
+                <div class="floorplan-cultural-wing" id="floorplan-cultural-wing" style="width: 49.6%">
+                  <!-- 3. 知性と文化 (8.2% — 朱色ハイライト) -->
+                  <button
+                    type="button"
+                    class="room-cell room-culture is-featured-investment"
+                    data-room="culture"
+                    id="room-cell-culture"
+                    style="height: 56.3%"
+                  >
+                    <span class="room-name-jp">知性と文化</span>
+                    <div class="room-bottom-figures">
+                      <span class="room-amount mono" id="room-amt-culture">¥36,490</span>
+                      <span class="room-ratio mono" id="room-dim-culture">8.2%</span>
+                    </div>
+                  </button>
+
+                  <!-- 4. 移動と交際 (6.4%) -->
+                  <button
+                    type="button"
+                    class="room-cell room-transit"
+                    data-room="transit"
+                    id="room-cell-transit"
+                    style="height: 43.7%"
+                  >
+                    <span class="room-name-jp">移動と交際</span>
+                    <div class="room-bottom-figures">
+                      <span class="room-amount mono" id="room-amt-transit">¥28,270</span>
+                      <span class="room-ratio mono" id="room-dim-transit">6.4%</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. 未来への余白・純貯蓄 (44.1%) -->
+            <button
+              type="button"
+              class="room-cell room-yohaku"
+              data-room="all"
+              id="room-cell-yohaku"
+              style="width: 44.1%"
+            >
+              <span class="room-name-jp">未来への余白・純貯蓄</span>
+              <div class="room-bottom-figures">
+                <span class="room-amount serif-room-figure mono" id="room-amt-yohaku">¥196,380</span>
+                <span class="room-ratio mono" id="room-dim-yohaku">44.1%</span>
+              </div>
+            </button>
+          </div>
+        </article>
+      </section>
+
+      <!-- ---------------------------------------------------------------
+           下段: 入出金台帳 (左 8列) + 取引詳細 (右 4列)
+           --------------------------------------------------------------- -->
+      <section class="grid-row ledger-spec-row">
+        <!-- =============================================================
+             下段左: 入出金台帳（4列のみ: 日付・内容・区画・金額）
+             ============================================================= -->
+        <section
+          class="grid-cell ledger-table-cell"
+          aria-label="入出金台帳"
+          data-xray="入出金台帳 · 44px 均一高 · 等幅数字右揃え"
+          data-xray-pos="top-left"
+        >
+          <div class="ledger-header-bar">
+            <div class="ledger-title-group">
+              <h2 class="cell-title">入出金台帳</h2>
+              <div class="ledger-room-pills" id="ledger-room-pills" role="tablist" aria-label="区画で絞り込み">
+                <button type="button" class="room-filter-btn active" data-filter="all">
+                  <span>すべて</span>
+                </button>
+                <button type="button" class="room-filter-btn" data-filter="housing">
+                  <span class="dot-indicator dot-housing"></span>
+                  <span>住居</span>
+                </button>
+                <button type="button" class="room-filter-btn" data-filter="food">
+                  <span class="dot-indicator dot-food"></span>
+                  <span>食と器</span>
+                </button>
+                <button type="button" class="room-filter-btn" data-filter="culture">
+                  <span class="dot-indicator dot-culture"></span>
+                  <span>知性と文化</span>
+                </button>
+                <button type="button" class="room-filter-btn" data-filter="transit">
+                  <span class="dot-indicator dot-transit"></span>
+                  <span>移動と交際</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="ledger-search-box">
+              <span class="icon-box" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+              </span>
+              <input
+                type="search"
+                id="ledger-search-input"
+                class="search-input"
+                placeholder="検索"
+                aria-label="台帳を検索"
+              />
+              <span class="keycap">/</span>
+            </div>
+          </div>
+
+          <div class="table-scroll-container">
+            <table class="architectural-table" id="architectural-ledger-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="col-date">日付</th>
+                  <th scope="col" class="col-merchant">内容</th>
+                  <th scope="col" class="col-room">区画</th>
+                  <th scope="col" class="col-amount num-col">金額</th>
+                </tr>
+              </thead>
+              <tbody id="ledger-tbody">
+                <!-- app.js により描画 -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- =============================================================
+             下段右: 取引詳細（店名・金額・内訳・一行メモが静かな余白に佇む）
+             ============================================================= -->
+        <aside
+          class="grid-cell blueprint-drawer-cell"
+          aria-label="取引詳細"
+          data-xray="取引詳細 · 余白のなかに佇む証憑"
+          data-xray-pos="top-right"
+        >
+          <div class="voucher-sheet" id="voucher-sheet">
+            <div class="voucher-meta-top">
+              <span class="mono muted-caption" id="spec-date">2026.10.27</span>
+              <span class="voucher-room-badge" id="spec-room-tag">知性と文化</span>
+            </div>
+
+            <div class="voucher-title-block">
+              <h3 class="voucher-merchant" id="spec-merchant">丸善ジュンク堂書店 丸の内本店</h3>
+              <p class="voucher-memo" id="spec-memo">スイス・タイポグラフィ建築図集・伝統木組専門書</p>
+            </div>
+
+            <div class="voucher-total-strip">
+              <span class="voucher-total-label">金額</span>
+              <span class="serif-voucher-total mono" id="spec-total-amount">¥10,850</span>
+            </div>
+
+            <div class="voucher-items-block">
+              <div class="voucher-items-header">
+                <span>内訳</span>
+              </div>
+              <ul class="voucher-items-list" id="spec-items-list">
+                <!-- app.js により描画 -->
+              </ul>
+            </div>
+
+            <div class="voucher-footer-note">
+              <span class="muted-caption">決済手段</span>
+              <span class="mono muted-caption" id="spec-account">三井住友カード（4821）</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <!-- =================================================================
+         モーダル: 新規記帳 ([N])
+         ================================================================= -->
+    <div class="modal-backdrop" id="modal-new-entry" hidden>
+      <div
+        class="modal-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-title">記帳</h2>
+          <button type="button" class="btn-close-modal" id="btn-close-modal" aria-label="閉じる">
+            <span class="keycap">Esc</span>
+          </button>
+        </div>
+
+        <form id="form-new-entry" class="modal-form">
+          <div class="form-row-split">
+            <div class="form-field">
+              <label for="input-date">日付</label>
+              <input type="date" id="input-date" required value="2026-10-29" class="form-input mono" />
+            </div>
+            <div class="form-field">
+              <label for="input-room">区画（費目）</label>
+              <select id="input-room" required class="form-input">
+                <option value="culture">知性と文化</option>
+                <option value="food">食と器</option>
+                <option value="housing">住居</option>
+                <option value="transit">移動と交際</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="input-merchant">店名・支払先</label>
+            <input
+              type="text"
+              id="input-merchant"
+              required
+              placeholder="例：東京鳩居堂 銀座本店"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="input-memo">一行メモ</label>
+            <input
+              type="text"
+              id="input-memo"
+              required
+              placeholder="例：季節の便箋・和紙封筒"
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-row-split">
+            <div class="form-field">
+              <label for="input-amount">金額（円）</label>
+              <input
+                type="number"
+                id="input-amount"
+                required
+                min="1"
+                max="300000"
+                step="1"
+                placeholder="4200"
+                class="form-input mono"
+              />
+            </div>
+            <div class="form-field">
+              <label for="input-account">決済手段</label>
+              <select id="input-account" class="form-input">
+                <option value="三井住友カード（4821）">三井住友カード（4821）</option>
+                <option value="モバイルSuica（9014）">モバイルSuica（9014）</option>
+                <option value="アメックス・ゴールド（3108）">アメックス・ゴールド（3108）</option>
+                <option value="三菱UFJ銀行 口座振替">三菱UFJ銀行 口座振替</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="btn-cancel-modal">キャンセル</button>
+            <button type="submit" class="btn-primary">記帳する</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

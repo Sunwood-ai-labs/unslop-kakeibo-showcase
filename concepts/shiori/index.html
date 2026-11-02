@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ja" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>家計栞 — 2026年 10月</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Noto+Sans+JP:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500&family=Shippori+Mincho:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- ===================================================================
+         SIGNATURE: Hanging Bookmark Ribbon (Click to toggle X-Ray Mode [U])
+         =================================================================== -->
+    <button
+      type="button"
+      class="bookmark-ribbon"
+      id="bookmark-ribbon-toggle"
+      title="赤入れ検証を切替 [U]"
+      aria-label="赤入れ検証を切替"
+      data-xray="栞紐シグネチャ [U]"
+      data-xray-pos="bottom-left"
+    >
+      <span class="bookmark-ribbon-cord"></span>
+      <span class="bookmark-ribbon-body">
+        <span class="bookmark-stitch"></span>
+        <span class="bookmark-kanji">栞</span>
+      </span>
+      <span class="bookmark-ribbon-tail"></span>
+    </button>
+
+    <!-- ===================================================================
+         TOP CONCEPT SWITCHER & GLOBAL CONTROLS BAR
+         =================================================================== -->
+    <nav
+      class="concept-switcher-bar"
+      aria-label="コンセプト切替"
+      data-xray="上部バー · 4pxグリッド"
+      data-xray-pos="bottom-left"
+    >
+      <div class="concept-switcher-inner">
+        <div class="concept-links">
+          <a href="../../index.html" class="concept-link">
+            <span class="mono">00</span> 枡
+          </a>
+          <a href="../shiori/index.html" class="concept-link active" aria-current="page">
+            <span class="mono">01</span> 家計栞
+          </a>
+          <a href="../pulse/index.html" class="concept-link">
+            <span class="mono">02</span> パルス
+          </a>
+          <a href="../tokonoma/index.html" class="concept-link">
+            <span class="mono">03</span> 床の間
+          </a>
+        </div>
+
+        <div class="top-bar-actions">
+          <button type="button" class="top-action-btn" id="toggle-xray-btn" title="赤入れ検証 [U]">
+            <span>赤入れ検証</span>
+            <span class="keycap">U</span>
+          </button>
+          <button type="button" class="top-action-btn" id="toggle-slop-btn" title="スロップ比較 [B]">
+            <span id="slop-btn-label">スロップ比較</span>
+            <span class="keycap">B</span>
+          </button>
+          <button type="button" class="top-action-btn" id="toggle-theme-btn" title="配色切替 [T]">
+            <span id="theme-btn-label">配色</span>
+            <span class="keycap">T</span>
+          </button>
+          <button type="button" class="top-action-btn top-action-primary" id="open-entry-modal-btn" title="記帳 [N]">
+            <span id="primary-cta-label">+ 記帳</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===================================================================
+         X-RAY REDLINE BANNER & AI SLOP COMPARISON BANNER
+         =================================================================== -->
+    <div class="xray-banner" id="xray-banner">
+      <div class="banner-row">
+        <span class="xray-dot"></span>
+        <span>
+          <strong>赤入れ検証モード:</strong> 4px余白グリッド・コットン紙配色（<code>#f7f4ee</code> / <code>#fdfbf7</code>）・等幅数字・銅版画チケット・10月強調チャートを検証中
+        </span>
+      </div>
+      <span class="mono">[U] で閉じる</span>
+    </div>
+
+    <div class="slop-comparison-banner" id="slop-banner">
+      <div class="banner-row">
+        <span>
+          <strong>スロップ比較モード:</strong> 過剰なネオン装飾・ピル型ボタン・説明過多なバッジを再現中
+        </span>
+      </div>
+      <span class="mono">[B] で家計栞に戻す</span>
+    </div>
+
+    <!-- ===================================================================
+         MAIN ARCHIVAL SHELL
+         =================================================================== -->
+    <div class="archival-shell">
+      <!-- QUIET MASTHEAD & 4 TABS -->
+      <header
+        class="quiet-masthead"
+        data-xray="静かな見出しと4タブ"
+        data-xray-pos="bottom-left"
+      >
+        <div class="masthead-month-group">
+          <button type="button" class="month-nav-btn" id="month-prev-btn" aria-label="前月">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          <h1 class="masthead-month-title" id="folio-month-label">2026年 10月</h1>
+          <button type="button" class="month-nav-btn" id="month-next-btn" aria-label="次月">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="shiori-tab-bar"
+          role="tablist"
+          aria-label="家計栞メニュー"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected="true"
+            class="shiori-tab active"
+            data-tab="spread"
+          >
+            月次手帖
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            class="shiori-tab"
+            data-tab="envelopes"
+          >
+            費目の栞
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            class="shiori-tab"
+            data-tab="journal"
+          >
+            歳時記
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected="false"
+            class="shiori-tab"
+            data-tab="spec"
+          >
+            設計仕様
+          </button>
+        </div>
+      </header>
+
+      <!-- ===================================================================
+           TAB VIEW 1: 月次手帖 (OPEN BOOK 2-COLUMN SPREAD)
+           =================================================================== -->
+      <main id="tab-view-spread" class="tab-view active">
+        <section
+          class="book-spread"
+          aria-label="月次手帖の見開き"
+          data-xray="見開き2カラム構成（左頁＋中央綴じ糸＋右頁）"
+          data-xray-pos="top-left"
+        >
+          <!-- ===============================================================
+               LEFT PAGE: Hero Figures + Moment 1 Voucher + Moment 2 Chart + 5 Envelopes
+               =============================================================== -->
+          <div class="book-page page-left">
+            <!-- TOP SUMMARY & MOMENT 1 (COPPERPLATE VOUCHER + BRASS CLIP) -->
+            <section
+              class="left-hero-section"
+              data-xray="左頁上部: 2つの主要指標 ＋ 銅版画チケット＆真鍮クリップ"
+              data-xray-pos="top-left"
+            >
+              <div class="hero-stats-pair">
+                <div class="quiet-stat">
+                  <span class="stat-caption">今月の支出</span>
+                  <strong class="stat-amount mono" id="stat-outflow">¥248,620</strong>
+                  <span class="stat-delta mono positive" id="stat-outflow-delta">-8.4% 先月比</span>
+                </div>
+
+                <div class="quiet-stat">
+                  <span class="stat-caption">純貯蓄</span>
+                  <strong class="stat-amount mono" id="stat-reserve">¥196,380</strong>
+                  <span class="stat-delta mono positive" id="stat-reserve-delta">+14.2% 目標比</span>
+                </div>
+              </div>
+
+              <!-- MOMENT 1: Copperplate Botanical Voucher + Brass Paperclip -->
+              <div class="voucher-ticket" id="engraved-voucher-card">
+                <div class="brass-paperclip-assembly" aria-hidden="true">
+                  <div class="voucher-silk-ribbon"></div>
+                  <svg class="brass-clip-svg" width="38" height="58" viewBox="0 0 44 68" fill="none">
+                    <defs>
+                      <linearGradient id="brassMetalGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#e7c873" />
+                        <stop offset="35%" stop-color="#b88928" />
+                        <stop offset="70%" stop-color="#f3df9d" />
+                        <stop offset="100%" stop-color="#8c6416" />
+                      </linearGradient>
+                      <filter id="clipDropShadow" x="-20%" y="-10%" width="140%" height="130%">
+                        <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#1c1917" flood-opacity="0.24" />
+                      </filter>
+                    </defs>
+                    <path
+                      d="M12 48 V14 C12 6.82 17.82 1 25 1 C32.18 1 38 6.82 38 14 V52 C38 60.28 31.28 67 23 67 C14.72 67 8 60.28 8 52 V20"
+                      stroke="url(#brassMetalGrad)"
+                      stroke-width="3.2"
+                      stroke-linecap="round"
+                      filter="url(#clipDropShadow)"
+                    />
+                    <path
+                      d="M17 22 V49 C17 53.97 21.03 58 26 58 C30.97 58 35 53.97 35 49 V16 C35 11.58 31.42 8 27 8 C22.58 8 19 11.58 19 16 V42"
+                      stroke="url(#brassMetalGrad)"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+
+                <div class="voucher-inner-frame">
+                  <div class="engraving-plate" aria-label="銅版画イラスト">
+                    <svg class="engraving-svg" viewBox="0 0 320 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <pattern id="engravingHatch1" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+                          <line x1="0" y1="0" x2="0" y2="4" stroke="currentColor" stroke-width="0.55" stroke-opacity="0.42" />
+                        </pattern>
+                        <pattern id="engravingHatch2" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(-40)">
+                          <line x1="0" y1="0" x2="0" y2="3" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.32" />
+                        </pattern>
+                        <pattern id="engravingHorizontal" width="4" height="2.5" patternUnits="userSpaceOnUse">
+                          <line x1="0" y1="0" x2="4" y2="0" stroke="currentColor" stroke-width="0.45" stroke-opacity="0.22" />
+                        </pattern>
+                      </defs>
+
+                      <rect x="6" y="6" width="308" height="112" rx="3" fill="url(#engravingHorizontal)" />
+                      <rect x="6" y="6" width="308" height="112" rx="3" stroke="currentColor" stroke-width="0.85" stroke-opacity="0.45" />
+
+                      <!-- Moon Halo -->
+                      <circle cx="258" cy="36" r="16" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="0.75" />
+                      <circle cx="258" cy="36" r="21" stroke="currentColor" stroke-width="0.45" stroke-dasharray="1.5 2" />
+
+                      <!-- Quiet Hills & Study House -->
+                      <path d="M8 102 Q85 76 165 94 T312 88 L312 117 L8 117 Z" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="0.7" />
+                      <path d="M190 60 L224 41 L258 60 Z" fill="url(#engravingHatch2)" stroke="currentColor" stroke-width="0.95" />
+                      <path d="M196 60 H252 V91 H196 Z" fill="var(--bg-card)" stroke="currentColor" stroke-width="0.9" />
+                      <rect x="204" y="67" width="16" height="15" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="0.65" />
+                      <line x1="212" y1="67" x2="212" y2="82" stroke="currentColor" stroke-width="0.55" />
+                      <line x1="204" y1="74.5" x2="220" y2="74.5" stroke="currentColor" stroke-width="0.55" />
+                      <rect x="228" y="67" width="15" height="24" fill="url(#engravingHatch2)" stroke="currentColor" stroke-width="0.65" />
+
+                      <!-- Centerpiece: Copper Pour-Over Kettle -->
+                      <g transform="translate(108, 32)">
+                        <path d="M18 56 L23 23 H48 L53 56 Z" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="1.05" />
+                        <path d="M35 23 L48 23 L53 56 L35 56 Z" fill="url(#engravingHatch2)" />
+                        <rect x="16" y="56" width="39" height="3.5" rx="1" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="0.85" />
+                        <path d="M21 23 C21 18 50 18 50 23 Z" fill="url(#engravingHatch2)" stroke="currentColor" stroke-width="0.85" />
+                        <circle cx="35.5" cy="16.5" r="2.5" fill="var(--sub-accent)" stroke="currentColor" stroke-width="0.75" />
+                        <path d="M20 44 C9 42 8 27 3 22 C1 20 0 21 0 21" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" />
+                        <path d="M50 26 C61 26 63 46 52 50" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
+                        <path d="M2 15 C0 10 5 7 3 2" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 1.5" />
+                      </g>
+
+                      <!-- Botanical Branch -->
+                      <g transform="translate(18, 14)">
+                        <path d="M8 90 C22 68 42 44 74 15" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" />
+                        <path d="M24 68 C12 64 8 50 20 46 C30 50 30 62 24 68 Z" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="0.8" />
+                        <path d="M38 51 C26 45 24 32 36 28 C46 33 44 45 38 51 Z" fill="url(#engravingHatch2)" stroke="currentColor" stroke-width="0.8" />
+                        <path d="M34 59 C46 63 55 55 51 44 C41 44 36 51 34 59 Z" fill="url(#engravingHatch1)" stroke="currentColor" stroke-width="0.8" />
+                        <path d="M51 38 C63 41 72 33 68 23 C58 23 53 30 51 38 Z" fill="url(#engravingHatch2)" stroke="currentColor" stroke-width="0.8" />
+                        <circle cx="55" cy="21" r="2.3" fill="var(--sub-accent)" stroke="currentColor" stroke-width="0.65" />
+                        <circle cx="63" cy="14" r="2" fill="var(--accent-ink)" stroke="currentColor" stroke-width="0.65" />
+                      </g>
+
+                      <!-- Minimalist Date Stamp Only -->
+                      <text x="18" y="109" fill="currentColor" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="0.06em" opacity="0.72">
+                        2026.10
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <hr class="archival-rule" />
+
+            <!-- MOMENT 2: One-Bright-Element Monthly Chart -->
+            <article
+              class="spread-block"
+              data-xray="月次推移: 10月のみフォレストインク・過去月は銅版画ハッチング"
+              data-xray-pos="top-left"
+            >
+              <div class="block-header">
+                <h2 class="block-title">月次推移</h2>
+
+                <div class="chart-legend-row">
+                  <span class="legend-item">
+                    <span class="swatch-bright"></span>
+                    <span>10月（今月）</span>
+                  </span>
+                  <span class="legend-item">
+                    <span class="swatch-hatched"></span>
+                    <span>過去月</span>
+                  </span>
+                  <span class="legend-item">
+                    <span class="swatch-terracotta"></span>
+                    <span>3ヶ月平均</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="seasonal-chart-stage" id="seasonal-chart-stage">
+                <!-- Populated by app.js -->
+              </div>
+            </article>
+
+            <hr class="archival-rule" />
+
+            <!-- 5 ENVELOPE BOOKMARKS (Single-line clean strips) -->
+            <article
+              class="spread-block"
+              data-xray="費目の栞: 6pxドット＋費目名＋進捗バー＋金額の1行構成"
+              data-xray-pos="top-left"
+            >
+              <div class="block-header">
+                <h2 class="block-title">費目の栞</h2>
+                <button type="button" class="btn-text-link" id="reset-envelope-filter-btn">
+                  すべて表示
+                </button>
+              </div>
+
+              <div class="envelope-bookmarks-list" id="left-page-envelopes">
+                <!-- Populated by app.js -->
+              </div>
+            </article>
+          </div>
+
+          <!-- CENTER BOOK SPINE CREASE & STITCHING -->
+          <div class="book-spine" aria-hidden="true">
+            <span class="spine-stitch"></span>
+            <span class="spine-stitch"></span>
+            <span class="spine-stitch"></span>
+            <span class="spine-stitch"></span>
+          </div>
+
+          <!-- ===============================================================
+               RIGHT PAGE: Ruled Ledger Table + Quiet Washi Receipt Preview
+               =============================================================== -->
+          <div class="book-page page-right">
+            <!-- Ruled Notebook Ledger Register -->
+            <article
+              class="spread-block"
+              data-xray="入出金台帳: 4列・行高44px・等幅右揃え"
+              data-xray-pos="top-left"
+            >
+              <div class="block-header">
+                <h2 class="block-title">入出金台帳</h2>
+
+                <div class="ledger-toolbar">
+                  <div class="search-field-wrap">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input
+                      type="search"
+                      id="ledger-search-input"
+                      class="ledger-search-input"
+                      placeholder="検索..."
+                      aria-label="台帳を検索"
+                    />
+                  </div>
+
+                  <select id="envelope-select-filter" class="ledger-select" aria-label="費目で絞り込み">
+                    <option value="all">すべての費目</option>
+                    <option value="housing">住居</option>
+                    <option value="food">食費</option>
+                    <option value="culture">文化</option>
+                    <option value="transit">移動</option>
+                    <option value="special">予備</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="ruled-table-container">
+                <table class="ruled-ledger-table" aria-label="入出金台帳">
+                  <thead>
+                    <tr>
+                      <th class="col-date">日付</th>
+                      <th>内容</th>
+                      <th>費目</th>
+                      <th class="col-amount">金額</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ledger-tbody">
+                    <!-- Populated by app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </article>
+
+            <hr class="archival-rule" />
+
+            <!-- Quiet Washi Receipt & Fountain-Pen Memo Preview -->
+            <article
+              class="spread-block inspector-block"
+              data-xray="領収書プレビュー: 店名・日付・金額・一行の万年筆メモ"
+              data-xray-pos="top-left"
+            >
+              <div class="washi-receipt-preview" id="voucher-inspector-container">
+                <!-- Populated by app.js -->
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <!-- ===================================================================
+           TAB VIEW 2: 費目の栞 (BUDGET ALLOCATIONS)
+           =================================================================== -->
+      <section id="tab-view-envelopes" class="tab-view" style="display: none;">
+        <div class="single-sheet-card">
+          <div class="block-header">
+            <div>
+              <h2 class="sheet-heading">費目の栞</h2>
+              <p class="sheet-prose">
+                五つの費目の月次予算を調律します。変更は手帖の進捗バーに即時反映されます。
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="reset-demo-data-btn">
+              初期状態に戻す
+            </button>
+          </div>
+
+          <div class="envelopes-folio-grid" id="envelopes-folio-grid">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB VIEW 3: 歳時記 (SEASONAL JOURNAL)
+           =================================================================== -->
+      <section id="tab-view-journal" class="tab-view" style="display: none;">
+        <div class="single-sheet-card">
+          <div class="block-header">
+            <div>
+              <h2 class="sheet-heading">歳時記</h2>
+              <p class="sheet-prose">
+                季節の移ろいと暮らしの出費を静かに振り返る手帖の余白です。
+              </p>
+            </div>
+          </div>
+
+          <div class="almanac-entries-grid" id="almanac-entries-grid">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB VIEW 4: 設計仕様 (DESIGN SPECIFICATION)
+           =================================================================== -->
+      <section id="tab-view-spec" class="tab-view" style="display: none;">
+        <div class="single-sheet-card">
+          <div class="block-header">
+            <div>
+              <h2 class="sheet-heading">設計仕様</h2>
+              <p class="sheet-prose">
+                引き算の美学とコットン紙・銅版画の質感に基づく家計栞の設計原則です。
+              </p>
+            </div>
+          </div>
+
+          <div class="spec-documentation-grid" id="spec-documentation-grid">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           QUIET FOOTER
+           =================================================================== -->
+      <footer class="archival-footer">
+        <div class="footer-left">
+          <span>家計栞</span>
+          <span class="footer-sep">·</span>
+          <span>引き算の美学に基づく月次手帖（設計思想：<a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener noreferrer">unslop</a>）</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ===================================================================
+         MODAL: NEW LEDGER ENTRY (Shortcut: [N])
+         =================================================================== -->
+    <div
+      class="modal-backdrop"
+      id="entry-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div class="modal-sheet">
+        <div class="modal-header">
+          <h2 class="block-title" id="modal-title">記帳</h2>
+          <button type="button" class="btn btn-secondary" id="close-modal-btn">
+            <span>閉じる</span>
+          </button>
+        </div>
+
+        <form id="entry-form" class="archival-form">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label" for="entry-date">日付</label>
+              <input type="date" id="entry-date" class="field-input mono" value="2026-10-29" required />
+            </div>
+            <div class="form-field">
+              <label class="field-label" for="entry-amount">金額 (¥)</label>
+              <input type="number" id="entry-amount" class="field-input mono" placeholder="4200" min="1" step="1" required />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label" for="entry-merchant">内容・支払先</label>
+              <input type="text" id="entry-merchant" class="field-input" placeholder="蕪木 蔵前" required />
+            </div>
+            <div class="form-field">
+              <label class="field-label" for="entry-envelope">費目</label>
+              <select id="entry-envelope" class="field-input" required>
+                <option value="housing">住居</option>
+                <option value="food" selected>食費</option>
+                <option value="culture">文化</option>
+                <option value="transit">移動</option>
+                <option value="special">予備</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="entry-memo">万年筆メモ</label>
+            <input type="text" id="entry-memo" class="field-input" placeholder="深煎りブレンド200gと季節の果物。" />
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="cancel-modal-btn">キャンセル</button>
+            <button type="submit" class="btn btn-primary">手帖に記す</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

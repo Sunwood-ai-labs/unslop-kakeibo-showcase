@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ja" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02 パルス — 家計簿</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- ===================================================================
+         CONCEPT SWITCHER BAR (Top Unified Navigation & Actions)
+         =================================================================== -->
+    <nav class="concept-switcher-bar" aria-label="コンセプト切替">
+      <div class="concept-links">
+        <a href="../../index.html" class="concept-pill">
+          <span class="mono">00</span>
+          <span>枡</span>
+        </a>
+        <a href="../shiori/index.html" class="concept-pill">
+          <span class="mono">01</span>
+          <span>家計栞</span>
+        </a>
+        <a href="../pulse/index.html" class="concept-pill active" aria-current="page">
+          <span class="concept-dot"></span>
+          <span class="mono">02</span>
+          <span>パルス</span>
+        </a>
+        <a href="../tokonoma/index.html" class="concept-pill">
+          <span class="mono">03</span>
+          <span>床の間</span>
+        </a>
+      </div>
+
+      <div class="topbar-controls">
+        <button type="button" class="cmd-chip" id="top-xray-btn" title="赤入れ検証 [U]">
+          <span>赤入れ検証</span>
+          <kbd class="keycap">U</kbd>
+        </button>
+        <button type="button" class="cmd-chip" id="top-slop-btn" title="スロップ比較 [B]">
+          <span id="top-slop-label">スロップ比較</span>
+          <kbd class="keycap">B</kbd>
+        </button>
+        <button type="button" class="cmd-chip" id="top-theme-btn" title="配色切替 [T]">
+          <span id="top-theme-label">配色</span>
+          <kbd class="keycap">T</kbd>
+        </button>
+        <button
+          type="button"
+          class="btn-signal"
+          id="top-log-btn"
+          data-xray="シグナルアクセント (#ff5c28) による単一プライマリCTA"
+        >
+          <span id="primary-cta-text">+ 記帳</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===================================================================
+         COCKPIT SHELL (56px Left Icon Rail + Main Deck)
+         =================================================================== -->
+    <div class="cockpit-shell">
+      <!-- 1. LEFT 56px COMPACT ICON RAIL -->
+      <aside
+        class="icon-rail"
+        aria-label="ナビゲーション"
+        data-xray="56px コンパクトアイコンレール · 16px 1.5pxストローク"
+      >
+        <div class="rail-brand" title="02 パルス">
+          <div class="pulse-osc-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <div class="rail-nav" role="tablist" aria-label="表示切替">
+          <button
+            type="button"
+            class="rail-btn active"
+            data-view="cockpit"
+            title="概要"
+            aria-label="概要"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+            <span class="rail-tooltip">概要 <kbd>1</kbd></span>
+          </button>
+
+          <button
+            type="button"
+            class="rail-btn"
+            data-view="horizon"
+            title="日次支出の推移"
+            aria-label="日次支出の推移"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="rail-tooltip">日次推移 <kbd>2</kbd></span>
+          </button>
+
+          <button
+            type="button"
+            class="rail-btn"
+            data-view="recurring"
+            title="費目・固定費"
+            aria-label="費目・固定費"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+              <path d="M2 12h20"></path>
+            </svg>
+            <span class="rail-tooltip">費目・固定費 <kbd>3</kbd></span>
+          </button>
+
+          <button
+            type="button"
+            class="rail-btn"
+            data-view="stream"
+            title="入出金明細"
+            aria-label="入出金明細"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 17 10 11 4 5"></polyline>
+              <line x1="12" y1="19" x2="20" y2="19"></line>
+            </svg>
+            <span class="rail-tooltip">入出金明細 <kbd>4</kbd></span>
+          </button>
+        </div>
+
+        <div class="rail-footer">
+          <button
+            type="button"
+            class="rail-btn"
+            id="rail-reset-btn"
+            title="データを初期化"
+            aria-label="データを初期化"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span class="rail-tooltip">初期化</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- 2. MAIN WORKSPACE -->
+      <div class="telemetry-workspace">
+        <!-- X-RAY ACTIVE BANNER -->
+        <div class="xray-banner" id="xray-banner">
+          <div>
+            <strong>赤入れ検証モード [U]</strong> — ディープインク階調（<code>#07080d</code> → <code>#11141c</code>）、4pxグリッド、ソラリー風カウンター、Canvasグリフ波形、単一アクセント波形を検証中。
+          </div>
+          <span class="mono">[U] で閉じる</span>
+        </div>
+
+        <!-- AI SLOP COMPARISON BANNER -->
+        <div class="slop-banner" id="slop-banner">
+          <div>
+            <strong>スロップ比較モード [B]</strong> — 典型的なAI生成UIの悪癖（過剰な紫・シアングラデーション、発光シャドウ、絵文字の乱用、太字見出し）を表示しています。
+          </div>
+          <button type="button" class="cmd-chip" id="exit-slop-btn" style="background: rgba(0,0,0,0.45); color: #fff; border-color: rgba(255,255,255,0.35);">
+            通常表示に戻す [B]
+          </button>
+        </div>
+
+        <!-- ===============================================================
+             MAIN BENTO GRID (12-Column Deck)
+             =============================================================== -->
+        <main class="bento-deck" id="bento-deck">
+          <!-- -------------------------------------------------------------
+               ROW 1: HERO PANEL (KPI + MOMENT 1 CANVAS GLYPH WAVE)
+               ------------------------------------------------------------- -->
+          <section
+            class="panel col-span-12 hero-telemetry-panel"
+            id="section-hero"
+            data-xray="Moment 1: 60fps Canvas グリフ波形 + ソラリー風カウンター"
+          >
+            <div class="hero-split">
+              <!-- Left: Clean Japanese KPI Readouts -->
+              <div class="hero-readout-col">
+                <div class="hero-month-heading" id="topbar-heading-text">2026年 10月</div>
+
+                <!-- Main Solari Counter -->
+                <div class="solari-block">
+                  <div class="solari-caption">
+                    <span>今月の支出</span>
+                  </div>
+                  <div
+                    class="solari-strip"
+                    id="solari-spent-strip"
+                    aria-label="今月の支出"
+                    data-xray="ソラリー風スプリットフラップ数字セル (tabular-nums)"
+                  >
+                    <!-- Populated dynamically -->
+                  </div>
+                  <div class="delta-line" id="hero-delta-spent">
+                    <span class="delta-badge positive">-8.4% 先月比</span>
+                  </div>
+                </div>
+
+                <!-- 2 Sub-Metrics Side by Side -->
+                <div class="sub-instruments-grid">
+                  <div class="instrument-cell">
+                    <div class="inst-label">純貯蓄</div>
+                    <div class="inst-solari mono" id="inst-savings-val">¥196,380</div>
+                    <div class="inst-delta" id="inst-savings-delta">
+                      貯蓄率 <span class="positive">44.1%</span>
+                    </div>
+                  </div>
+
+                  <div class="instrument-cell">
+                    <div class="inst-label">日次ペース</div>
+                    <div class="inst-solari mono" id="inst-burn-val">¥8,020 <small>/日</small></div>
+                    <div class="inst-delta" id="inst-burn-delta">
+                      残予算 <span class="mono">¥171,380</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: MOMENT 1 — Interactive 60fps Canvas Glyph Contour Field -->
+              <div class="hero-canvas-col">
+                <div class="canvas-Stage" id="glyph-canvas-stage">
+                  <canvas
+                    id="glyph-matrix-canvas"
+                    aria-label="キャッシュフロー密度グリフ波形"
+                  ></canvas>
+
+                  <!-- Top-Right Waveform Mode Switcher -->
+                  <div class="canvas-toolbar">
+                    <div class="seg-group" role="tablist" aria-label="波形表示モード">
+                      <button type="button" class="seg-btn active" data-glyph-mode="wave">密度波形</button>
+                      <button type="button" class="seg-btn" data-glyph-mode="runway">予算軌道</button>
+                      <button type="button" class="seg-btn" data-glyph-mode="matrix">費目マトリクス</button>
+                    </div>
+                  </div>
+
+                  <!-- 2 Selected Pinned Callout Tags -->
+                  <div
+                    class="glyph-pin pin-orange"
+                    style="top: 24%; left: 10%;"
+                    id="pin-burn"
+                  >
+                    <span class="pin-dot"></span>
+                    <span class="pin-val mono" id="pin-burn-text">¥8,020 /日</span>
+                  </div>
+
+                  <div
+                    class="glyph-pin pin-emerald"
+                    style="bottom: 18%; right: 10%;"
+                    id="pin-runway"
+                  >
+                    <span class="pin-dot"></span>
+                    <span class="pin-key">残予算</span>
+                    <span class="pin-val mono" id="pin-runway-text">¥171,380</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- -------------------------------------------------------------
+               ROW 2: MOMENT 2 (8 COLS) — 日次支出の推移
+                      + 費目別の消化状況 (4 COLS)
+               ------------------------------------------------------------- -->
+          <article
+            class="panel col-span-8"
+            id="section-horizon"
+            data-xray="Moment 2: シグナルオレンジ (#ff5c28) による日次支出推移チャート"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title" id="horizon-title">日次支出の推移</h2>
+
+              <div class="panel-actions">
+                <div class="seg-group" role="tablist" aria-label="グラフ表示切替">
+                  <button type="button" class="seg-btn active" data-horizon-mode="impulse">日次バー</button>
+                  <button type="button" class="seg-btn" data-horizon-mode="combined">累積ペース</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Stage -->
+            <div class="horizon-svg-wrap" id="horizon-svg-wrap">
+              <div class="horizon-tooltip mono" id="horizon-tooltip"></div>
+              <svg
+                id="impulse-horizon-svg"
+                class="horizon-svg"
+                viewBox="0 0 780 264"
+                preserveAspectRatio="none"
+                aria-label="日次支出の推移チャート"
+              ></svg>
+            </div>
+          </article>
+
+          <!-- RIGHT 4 COLS: 費目別の消化状況 (or 固定費一覧 on toggle) -->
+          <article
+            class="panel col-span-4"
+            id="section-recurring"
+            data-xray="費目別の消化状況（1行完結：ドット＋費目名＋細いバー＋金額）"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title" id="side-allocation-title">費目別の消化状況</h2>
+              <div class="seg-group" role="tablist" aria-label="表示切替">
+                <button type="button" class="seg-btn active" data-alloc-mode="envelopes">費目別</button>
+                <button type="button" class="seg-btn" data-alloc-mode="recurring">固定費</button>
+              </div>
+            </div>
+
+            <div class="allocation-list" id="recurring-matrix-list">
+              <!-- Populated by app.js -->
+            </div>
+          </article>
+
+          <!-- -------------------------------------------------------------
+               ROW 3: 入出金明細 (8 COLS) + 取引詳細パネル (4 COLS)
+               ------------------------------------------------------------- -->
+          <article
+            class="panel col-span-8"
+            id="section-stream"
+            data-xray="40px 行高 · 右揃え等幅数字 · 端正な日本語明細テーブル"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title">入出金明細</h2>
+
+              <div class="seg-group" id="stream-type-tabs" role="tablist" aria-label="種別フィルタ">
+                <button type="button" class="seg-btn active" data-tx-type="all">すべて</button>
+                <button type="button" class="seg-btn" data-tx-type="expense">変動費</button>
+                <button type="button" class="seg-btn" data-tx-type="fixed">固定費</button>
+                <button type="button" class="seg-btn" data-tx-type="income">収入</button>
+              </div>
+            </div>
+
+            <!-- Search & Category Filter Toolbar -->
+            <div class="stream-toolbar">
+              <div class="search-box">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input
+                  type="search"
+                  id="stream-search-input"
+                  class="search-input"
+                  placeholder="検索..."
+                  aria-label="明細を検索"
+                />
+                <kbd class="keycap">/</kbd>
+              </div>
+
+              <div class="chip-strip" id="stream-envelope-chips">
+                <!-- Populated by app.js -->
+              </div>
+            </div>
+
+            <!-- Clean Japanese Transaction Table -->
+            <div class="table-container">
+              <table class="telemetry-table">
+                <thead>
+                  <tr>
+                    <th class="col-ts sortable" data-sort="date">日付 ↓</th>
+                    <th class="col-node">内容</th>
+                    <th class="col-env">費目</th>
+                    <th class="col-inst">決済手段</th>
+                    <th class="col-amt sortable" data-sort="amount">金額</th>
+                  </tr>
+                </thead>
+                <tbody id="stream-tbody">
+                  <!-- Populated by app.js -->
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- RIGHT 4 COLS: 取引詳細 & JSON表示 -->
+          <aside
+            class="panel col-span-4 inspector-panel"
+            id="section-inspector"
+            data-xray="取引詳細パネル（取引詳細 / JSON表示）"
+          >
+            <div class="panel-header">
+              <h2 class="panel-title">取引詳細</h2>
+              <div class="seg-group" role="tablist" aria-label="詳細表示モード">
+                <button type="button" class="seg-btn active" data-insp-mode="voucher">取引詳細</button>
+                <button type="button" class="seg-btn" data-insp-mode="json">JSON表示</button>
+              </div>
+            </div>
+
+            <div id="packet-inspector-body" class="inspector-body">
+              <!-- Populated dynamically by app.js -->
+            </div>
+          </aside>
+        </main>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         SUBTLE FLOATING DOCK (Minimal Japanese Pills)
+         =================================================================== -->
+    <div
+      class="floating-command-bar"
+      role="toolbar"
+      aria-label="クイック操作"
+      data-xray="控えめな日本語ショートカットピル [N] [/] [U] [T]"
+    >
+      <button type="button" class="dock-action primary" id="dock-log-btn">
+        <span>+ 記帳</span>
+        <kbd class="keycap">N</kbd>
+      </button>
+      <button type="button" class="dock-action" id="dock-filter-btn">
+        <span>検索</span>
+        <kbd class="keycap">/</kbd>
+      </button>
+      <button type="button" class="dock-action" id="dock-xray-btn">
+        <span>赤入れ</span>
+        <kbd class="keycap">U</kbd>
+      </button>
+      <button type="button" class="dock-action" id="dock-theme-btn">
+        <span>配色</span>
+        <kbd class="keycap">T</kbd>
+      </button>
+    </div>
+
+    <!-- ===================================================================
+         MODAL: 新規記帳 (Shortcut: N)
+         =================================================================== -->
+    <div
+      class="modal-backdrop"
+      id="pulse-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pulse-modal-title"
+    >
+      <div class="modal-dialog">
+        <div class="panel-header" style="margin-bottom: 16px;">
+          <h2 class="panel-title" id="pulse-modal-title">新規記帳</h2>
+          <button type="button" class="cmd-chip" id="close-modal-btn">
+            <span>閉じる</span>
+            <kbd class="keycap">Esc</kbd>
+          </button>
+        </div>
+
+        <form id="pulse-entry-form" class="form-stack">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label" for="pulse-date">日付</label>
+              <input type="date" id="pulse-date" class="field-input mono" value="2026-10-30" required />
+            </div>
+            <div class="form-field">
+              <label class="field-label" for="pulse-amount">金額 (¥)</label>
+              <input type="number" id="pulse-amount" class="field-input mono" placeholder="4200" min="1" step="1" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="pulse-merchant">店舗・内容</label>
+            <input type="text" id="pulse-merchant" class="field-input" placeholder="成城石井 恵比寿店" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label" for="pulse-envelope">費目</label>
+              <select id="pulse-envelope" class="field-input" required>
+                <option value="housing">住居</option>
+                <option value="food" selected>食費</option>
+                <option value="culture">文化</option>
+                <option value="transit">移動</option>
+                <option value="special">予備</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="field-label" for="pulse-account">決済手段</label>
+              <select id="pulse-account" class="field-input" required>
+                <option value="三井住友カード">三井住友カード</option>
+                <option value="モバイルSuica">モバイルSuica</option>
+                <option value="口座振替">口座振替</option>
+                <option value="アメックス">アメックス</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="field-label" for="pulse-type">種別</label>
+              <select id="pulse-type" class="field-input">
+                <option value="expense" selected>変動費</option>
+                <option value="fixed">固定費</option>
+                <option value="income">収入</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="field-label" for="pulse-memo">メモ</label>
+              <input type="text" id="pulse-memo" class="field-input" placeholder="週末の食材まとめ買い" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="cmd-chip" id="cancel-modal-btn">キャンセル</button>
+            <button type="submit" class="btn-signal">記帳する</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

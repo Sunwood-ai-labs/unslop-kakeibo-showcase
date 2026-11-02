@@ -1,0 +1,1816 @@
+/* ==========================================================================
+   Masu (枡) — Household Ledger
+   Design System & Tokens strictly implementing unslop by Damir Sokolovsky (@heydamir) — CC BY 4.0
+   9 Passes: Spacing (4px grid), Color (Graphite/Warm Neutral Ramps), Icons (16px 1.5 stroke),
+   Copy (Context-first, comparative deltas), Type (400/500, tabular-nums, sentence case),
+   Layout (256px sidebar + fluid desktop shell), Details (Nested radii, keycaps, 2 moments),
+   Visuals (Tactile payment cards & receipt, 5-series envelope spline chart), Motion (1 easing).
+   ========================================================================== */
+
+:root {
+  /* --- Pass 1: Spacing Scale (strictly 4px multiples) --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 28px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* --- Pass 2: Neutral Ramp — Dark Mode (Default: Quiet Graphite) --- */
+  --bg-deepest: #0f0f10;        /* Sidebar */
+  --bg-page: #141415;           /* Main canvas */
+  --bg-card: #19191b;           /* Card surface */
+  --bg-raised: #232325;         /* Active row, input, button secondary */
+  --bg-hover: rgba(255, 255, 255, 0.035);
+  --bg-modal-backdrop: rgba(10, 10, 11, 0.72);
+
+  --border-hairline: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+
+  --text-primary: #ededed;
+  --text-secondary: #a1a1a6;
+  --text-muted: #78787e;
+
+  /* Primary Action Button (Off-white from ramp with dark text) */
+  --btn-primary-bg: #ededed;
+  --btn-primary-fg: #141415;
+  --btn-primary-hover: #ffffff;
+
+  /* Semantic Colors (Toned to sit inside the ramp) */
+  --sem-positive: #4cc38a;
+  --sem-positive-bg: rgba(76, 195, 138, 0.10);
+  --sem-negative: #e5484d;
+  --sem-negative-bg: rgba(229, 72, 77, 0.10);
+
+  /* 5 Envelopes (Moment 2 & Signature 6px Dots ONLY) */
+  --env-housing: #f5b82e;       /* 住居・固定費 (Amber) */
+  --env-food: #10b981;          /* 食費・日用品 (Emerald) */
+  --env-culture: #3b82f6;       /* 交際・文化 (Cobalt) */
+  --env-transit: #ec4899;       /* 交通・移動 (Rose) */
+  --env-special: #8b5cf6;       /* 特別・予備 (Violet) */
+
+  /* --- Pass 5: Typography --- */
+  --font-sans: 'Inter', 'Plus Jakarta Sans', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* --- Pass 7: Nested Radii --- */
+  --r-keycap: 4px;
+  --r-control: 8px;
+  --r-card: 12px;
+  --r-modal: 16px;
+
+  /* --- Pass 9: Motion --- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med: 200ms;
+  --dur-slow: 360ms;
+
+  /* Shadows */
+  --shadow-card: none;
+  --shadow-float: 0 16px 40px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --receipt-paper: #e8e4dc;
+  --receipt-ink: #23211e;
+}
+
+/* --- Light Mode (Warm Paper Ledger) --- */
+html[data-theme="light"] {
+  --bg-deepest: #f2efe9;        /* Sidebar */
+  --bg-page: #f7f4ee;           /* Page BG */
+  --bg-card: #fdfbf7;           /* Card Surface */
+  --bg-raised: #eae5dc;         /* Raised / Active / Input */
+  --bg-hover: rgba(24, 24, 27, 0.04);
+  --bg-modal-backdrop: rgba(24, 24, 27, 0.36);
+
+  --border-hairline: rgba(23, 23, 23, 0.08);
+  --border-strong: rgba(23, 23, 23, 0.15);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+
+  --btn-primary-bg: #18181b;
+  --btn-primary-fg: #fdfbf7;
+  --btn-primary-hover: #27272a;
+
+  --sem-positive: #16a34a;
+  --sem-positive-bg: rgba(22, 163, 74, 0.09);
+  --sem-negative: #dc2626;
+  --sem-negative-bg: rgba(220, 38, 38, 0.09);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 12px 32px rgba(24, 24, 27, 0.12), 0 0 0 1px rgba(23, 23, 23, 0.08);
+  --receipt-paper: #f4f0e6;
+  --receipt-ink: #1c1917;
+}
+
+/* ==========================================================================
+   Reset & Base
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--dur-med) var(--ease-out), color var(--dur-med) var(--ease-out);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Strict Tabular Numerals for all numbers, dates, amounts, percentages */
+.tabular,
+.mono,
+time,
+.amount,
+.delta,
+.count,
+.card-figure,
+table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   Concept Switcher Bar (36px Top Strip — 4-Concept Navigation)
+   ========================================================================== */
+.concept-switcher-bar {
+  height: 36px;
+  background-color: var(--bg-deepest);
+  border-bottom: 1px solid var(--border-hairline);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color var(--dur-med) var(--ease-out), border-color var(--dur-med) var(--ease-out);
+}
+
+.concept-switcher-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switcher-caption {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.concept-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.concept-pill {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--r-keycap);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.concept-pill:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+}
+
+.concept-pill.active {
+  color: var(--text-primary);
+  background-color: var(--bg-raised);
+  border-color: var(--border-strong);
+  font-weight: 500;
+}
+
+.concept-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--env-food);
+}
+
+/* ==========================================================================
+   App Layout (Pass 6: Full-height shell, 256px sidebar, fluid main)
+   ========================================================================== */
+.app-shell {
+  display: flex;
+  min-height: calc(100vh - 36px);
+  width: 100%;
+}
+
+/* --- Sidebar (256px fixed width, 16px padding, 34px nav row, 2px gap) --- */
+.sidebar {
+  width: 256px;
+  flex-shrink: 0;
+  background-color: var(--bg-deepest);
+  border-right: 1px solid var(--border-hairline);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 36px;
+  height: calc(100vh - 36px);
+  overflow-y: auto;
+  user-select: none;
+  transition: background-color var(--dur-med) var(--ease-out), border-color var(--dur-med) var(--ease-out);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 8px;
+  gap: 10px;
+}
+
+/* Flat solid-color Masu (wooden square measure) joint mark */
+.brand-mark {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--text-primary);
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-mark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border: 1.25px solid var(--text-secondary);
+  border-radius: 1px;
+}
+
+.brand-name {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+/* Sidebar Search Trigger */
+.sidebar-search {
+  margin-top: 16px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-hairline);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  width: 100%;
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.sidebar-search:hover {
+  border-color: var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.sidebar-search .keycap {
+  margin-left: auto;
+}
+
+/* Section Labels: 24px above, 8px below, Sentence case (Never uppercase tracked) */
+.nav-section-label {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  padding: 0 8px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Nav row: 34px height, 8px radius, icons aligned in 16px column with 10px gap */
+.nav-item {
+  height: 34px;
+  padding: 0 8px;
+  border-radius: var(--r-control);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 400;
+  width: 100%;
+  text-align: left;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.nav-item:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  font-weight: 500;
+  box-shadow: var(--highlight-top);
+}
+
+.nav-icon-box {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.nav-item.active .nav-icon-box,
+.nav-item:hover .nav-icon-box {
+  color: var(--text-primary);
+}
+
+.nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-meta {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Signature 6px Status Dot for Envelopes */
+.env-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.env-row {
+  height: 32px;
+  padding: 0 8px;
+  border-radius: var(--r-control);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  width: 100%;
+  text-align: left;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.env-row:hover,
+.env-row.active-series {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+}
+
+.env-row .icon-col {
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.env-row .env-amount {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.credit-note {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+
+.credit-note a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- Signature Keycaps (Pass 7: 4px radius, quiet border, mono) --- */
+.keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--r-keycap);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--text-muted);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Main Content Area & Top Bar (56px height)
+   ========================================================================== */
+.main-area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 1440px;
+}
+
+.topbar {
+  height: 56px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--bg-page);
+  position: sticky;
+  top: 36px;
+  z-index: 20;
+  transition: background-color var(--dur-med) var(--ease-out), border-color var(--dur-med) var(--ease-out);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.period-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.period-sep {
+  color: var(--text-muted);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Controls & Buttons (32px height in topbar, 8px radius) */
+.btn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--r-control);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.btn-secondary.active-toggle {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  box-shadow: var(--highlight-top);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  box-shadow: var(--highlight-top);
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.btn-primary .keycap {
+  background-color: rgba(0, 0, 0, 0.14);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: inherit;
+  box-shadow: none;
+}
+
+html[data-theme="light"] .btn-primary .keycap {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fdfbf7;
+}
+
+/* --- Content Container (28px - 32px padding) --- */
+.content-wrap {
+  padding: 28px 32px 48px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Page Header (Pass 4: Period & context, never "Welcome back! 👋") */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-title {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.header-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-meta-label {
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Stat Cards Row (3 Cards, Asymmetric weight with Moment 1 in Card 1)
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-card);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: background-color var(--dur-med) var(--ease-out), border-color var(--dur-med) var(--ease-out);
+}
+
+.stat-card {
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.stat-label {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label-jp {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.stat-figure {
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  margin-top: 8px;
+}
+
+.stat-delta-row {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.delta-val {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.delta-val.positive {
+  color: var(--sem-positive);
+}
+
+.delta-val.negative {
+  color: var(--sem-negative);
+}
+
+.delta-ref {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   MOMENT 1: Tactile Payment Cards & Thermal Receipt (CSS/SVG Crafted Object)
+   ========================================================================== */
+.moment-cards-stage {
+  position: absolute;
+  right: 16px;
+  bottom: -14px;
+  width: 192px;
+  height: 136px;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Thermal Paper Receipt peeking from behind the cards */
+.tactile-receipt {
+  position: absolute;
+  top: 2px;
+  left: 16px;
+  width: 96px;
+  height: 92px;
+  background-color: var(--receipt-paper);
+  color: var(--receipt-ink);
+  border-radius: 2px;
+  padding: 8px 8px 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  line-height: 11px;
+  transform: rotate(-8deg);
+  box-shadow: -4px 6px 14px rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1;
+}
+
+/* Zigzag serrated top edge for thermal receipt */
+.tactile-receipt::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, transparent 33.33%, var(--receipt-paper) 33.33%, var(--receipt-paper) 66.67%, transparent 66.67%),
+              linear-gradient(45deg, var(--receipt-paper) 33.33%, transparent 33.33%);
+  background-size: 6px 8px;
+}
+
+.receipt-head {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border-bottom: 1px dashed rgba(35, 33, 30, 0.35);
+  padding-bottom: 2px;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.receipt-line {
+  display: flex;
+  justify-content: space-between;
+  opacity: 0.85;
+}
+
+/* Secondary Brushed Brass / Titanium Card (Back) */
+.tactile-card-back {
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  width: 140px;
+  height: 90px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3b3731 0%, #272420 55%, #1d1b18 100%);
+  border: 1px solid rgba(245, 184, 46, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 238, 200, 0.22),
+    0 8px 20px rgba(0, 0, 0, 0.42);
+  transform: rotate(-4deg);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.tactile-card-back .card-issuer {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  color: #d6c7b2;
+}
+
+/* Primary Brushed Graphite Metal Card (Front) */
+.tactile-card-front {
+  position: absolute;
+  top: 32px;
+  right: 4px;
+  width: 148px;
+  height: 94px;
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(145deg, #2c2d31 0%, #1d1e21 52%, #131416 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    -6px 10px 24px rgba(0, 0, 0, 0.55);
+  transform: rotate(3deg);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.tactile-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Metallic EMV Chip */
+.emv-chip {
+  width: 22px;
+  height: 16px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #e7c986 0%, #b89348 50%, #dfbe77 100%);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.emv-chip::before,
+.emv-chip::after {
+  content: "";
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.28);
+}
+
+.emv-chip::before {
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  background: transparent;
+}
+
+.emv-chip::after {
+  left: 7px;
+  right: 7px;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.25);
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  background: transparent;
+}
+
+.card-contactless {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.tactile-card-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #ededed;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tactile-card-tag {
+  font-size: 8px;
+  color: #a1a1a6;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   Middle Row: 2/3 Main Chart (Moment 2) + 1/3 Envelope Allocation List
+   ========================================================================== */
+.mid-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 360px;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-title {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+}
+
+/* Segmented Tabs (8px outer, 6px inner) */
+.segmented-tabs {
+  display: inline-flex;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.seg-tab {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+
+.seg-tab:hover {
+  color: var(--text-secondary);
+}
+
+.seg-tab.active {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  font-weight: 500;
+  box-shadow: var(--highlight-top);
+}
+
+/* Chart Legend Strip */
+.chart-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+
+.legend-item:hover {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+}
+
+.legend-item.dimmed {
+  opacity: 0.35;
+}
+
+.legend-mirror-note {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-dash {
+  width: 12px;
+  height: 1.5px;
+  background-color: var(--text-muted);
+  display: inline-block;
+}
+
+/* SVG Chart Container */
+.chart-stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 248px;
+  display: flex;
+  align-items: center;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 256px;
+  overflow: visible;
+}
+
+.chart-grid-line {
+  stroke: var(--border-hairline);
+  stroke-width: 1;
+}
+
+.chart-zero-line {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.chart-axis-label {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.spline-path {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity var(--dur-med) var(--ease-out), stroke-width var(--dur-fast) var(--ease-out);
+}
+
+.spline-path.dimmed {
+  opacity: 0.16;
+}
+
+.spline-path.highlighted {
+  stroke-width: 2.75;
+}
+
+.mirror-path {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-opacity: 0.32;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  stroke-linecap: round;
+}
+
+/* Chart Hover Tooltip */
+.chart-tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-control);
+  padding: 8px 12px;
+  font-size: 12px;
+  box-shadow: var(--shadow-float);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  z-index: 10;
+}
+
+.chart-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Right 1/3: Envelope Allocation (Masu Compartments) --- */
+.envelope-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.envelope-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  margin: -8px;
+  border-radius: var(--r-control);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.envelope-item:hover {
+  background-color: var(--bg-hover);
+}
+
+.envelope-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.envelope-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 400;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.envelope-figures {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.envelope-figures .budget-cap {
+  color: var(--text-muted);
+}
+
+/* 4px Sharp Progress Bar */
+.envelope-bar-track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--bg-raised);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.envelope-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: transform var(--dur-slow) var(--ease-out);
+  transform-origin: left center;
+}
+
+.envelope-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   Bottom Section: Transactions Ledger Table & Inspector
+   ========================================================================== */
+.ledger-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.ledger-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 224px;
+}
+
+.search-input-wrap svg {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 28px 0 32px;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  font-size: 13px;
+  color: var(--text-primary);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+}
+
+.search-input-wrap .keycap {
+  position: absolute;
+  right: 6px;
+  pointer-events: none;
+}
+
+.filter-chip {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--r-control);
+  background-color: var(--bg-deepest);
+  border: 1px solid var(--border-hairline);
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+
+.filter-chip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.filter-chip.active {
+  background-color: var(--bg-raised);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  font-weight: 500;
+}
+
+/* Ledger Table (Strict 40px row height, aligned columns, right-aligned tabular amounts) */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ledger-table th {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-hairline);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.ledger-table th.sortable {
+  cursor: pointer;
+}
+
+.ledger-table th.sortable:hover {
+  color: var(--text-primary);
+}
+
+.ledger-table td {
+  height: 44px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border-hairline);
+  font-size: 13px;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.ledger-table tbody tr {
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.ledger-table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.ledger-table tbody tr.selected-row {
+  background-color: var(--bg-raised);
+}
+
+.col-date {
+  width: 104px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.col-merchant {
+  font-weight: 400;
+}
+
+.merchant-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.merchant-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.col-envelope {
+  width: 168px;
+}
+
+.envelope-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.col-account {
+  width: 148px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.col-amount {
+  width: 128px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.ledger-table th.col-amount {
+  text-align: right;
+}
+
+.amount-income {
+  color: var(--sem-positive);
+}
+
+/* --- Right Detail Inspector (Thermal Receipt & Entry Metadata) --- */
+.inspector-card {
+  position: sticky;
+  top: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.receipt-preview-box {
+  background-color: var(--receipt-paper);
+  color: var(--receipt-ink);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.receipt-preview-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(35, 33, 30, 0.3);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.receipt-merchant-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #141311;
+  font-family: var(--font-sans);
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px dashed rgba(35, 33, 30, 0.3);
+  margin-top: 8px;
+  padding-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.inspector-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-danger-quiet {
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.btn-danger-quiet:hover {
+  color: var(--sem-negative);
+  border-color: var(--sem-negative);
+}
+
+/* ==========================================================================
+   Secondary Views (Envelopes Grid, Cards & Accounts, Recurring, Unslop Spec)
+   ========================================================================== */
+.masu-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.masu-box-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cards-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.physical-card-large {
+  height: 192px;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  color: #ededed;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.physical-card-large.graphite-metal {
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 3px),
+    linear-gradient(145deg, #2d2e33 0%, #1c1d21 55%, #121316 100%);
+}
+
+.physical-card-large.brass-metal {
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 235, 190, 0.018) 0px, rgba(255, 235, 190, 0.018) 1px, transparent 1px, transparent 3px),
+    linear-gradient(145deg, #3f3931 0%, #292520 55%, #1a1815 100%);
+  border-color: rgba(245, 184, 46, 0.28);
+}
+
+.physical-card-large.suica-ic {
+  background: linear-gradient(145deg, #1f2e28 0%, #15211c 58%, #0f1714 100%);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+/* ==========================================================================
+   Modal (16px radius, nested 8px inputs)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-window {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-modal);
+  padding: 24px;
+  box-shadow: var(--shadow-float);
+  transform: translateY(8px);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
+.modal-backdrop.open .modal-window {
+  transform: translateY(0);
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.field-input {
+  height: 36px;
+  padding: 0 12px;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--r-control);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   UNIQUE FEATURE 1: Unslop Redline X-Ray Overlay ([U] Keycap)
+   Visualizes unslop's 9 Passes directly on the live DOM like story.mjs
+   ========================================================================== */
+.xray-banner {
+  display: none;
+  background-color: #1a1115;
+  border-bottom: 1px solid rgba(255, 77, 106, 0.35);
+  padding: 8px 32px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #ffb3bf;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.xray-active .xray-banner {
+  display: flex;
+}
+
+[data-xray] {
+  position: relative;
+}
+
+body.xray-active [data-xray] {
+  outline: 1px dashed rgba(255, 77, 106, 0.65);
+  outline-offset: -1px;
+}
+
+body.xray-active [data-xray]::after {
+  content: attr(data-xray);
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #ff4d6a;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 40;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+body.xray-active [data-xray-pos="bottom-left"]::after {
+  top: auto;
+  right: auto;
+  bottom: 4px;
+  left: 4px;
+}
+
+body.xray-active [data-xray-pos="bottom-right"]::after {
+  top: auto;
+  bottom: 4px;
+  right: 4px;
+}
+
+body.xray-active [data-xray-pos="above-right"]::after {
+  top: -11px;
+  right: 0;
+}
+
+body.xray-active [data-xray-pos="top-left"]::after {
+  top: -15px;
+  right: auto;
+  left: 0;
+}
+
+body.xray-active [data-xray-pos="topbar-left"]::after {
+  top: 2px;
+  right: auto;
+  left: 32px;
+}
+
+body.xray-active .page-header[data-xray]::after {
+  top: -16px;
+  right: auto;
+  left: 0;
+}
+
+/* ==========================================================================
+   UNIQUE FEATURE 2: "Compare Typical AI Slop vs Unslop Craft" Mode ([B] Keycap)
+   Intentionally demonstrates all signs from references/signs.md when toggled ON
+   ========================================================================== */
+.slop-comparison-banner {
+  display: none;
+  background: linear-gradient(90deg, #4c1d95 0%, #1e3a8a 100%);
+  border-bottom: 1px solid rgba(192, 132, 252, 0.5);
+  padding: 10px 32px;
+  color: #ffffff;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+body.slop-mode .slop-comparison-banner {
+  display: flex;
+}
+
+body.slop-mode {
+  background: linear-gradient(160deg, #3b1d7a 0%, #1b1045 50%, #0d1131 100%) !important;
+  color: #e9d5ff !important;
+}
+
+body.slop-mode .sidebar {
+  background: #140e33 !important;
+  border-right: 1px solid #4c35a8 !important;
+  padding: 11px 19px 14px 11px !important; /* Uneven non-4px slop spacing */
+}
+
+body.slop-mode .topbar {
+  background: rgba(20, 14, 51, 0.75) !important;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.4) !important;
+}
+
+body.slop-mode .card {
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, 0.14) 0%, transparent 60%),
+    linear-gradient(115deg, #2b1f6e 0%, #1f2269 48%, #122666 100%) !important;
+  border: 1px solid rgba(167, 139, 250, 0.55) !important;
+  border-radius: 24px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 14px 34px rgba(124, 58, 237, 0.45) !important;
+}
+
+body.slop-mode .page-title,
+body.slop-mode .stat-figure {
+  background: linear-gradient(135deg, #f0abfc 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  font-weight: 800 !important;
+}
+
+body.slop-mode .nav-item.active,
+body.slop-mode .btn-primary {
+  background: linear-gradient(135deg, #9333ea 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.65) !important;
+}
+
+body.slop-mode .keycap {
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  padding: 0 8px !important;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.6) !important;
+  border: none !important;
+}
+
+body.slop-mode .stat-label,
+body.slop-mode .nav-section-label {
+  text-transform: uppercase !important;
+  letter-spacing: 0.14em !important;
+  font-weight: 700 !important;
+  color: #c4b5fd !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1120px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .mid-grid {
+    grid-template-columns: 1fr;
+  }
+  .ledger-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .topbar, .content-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

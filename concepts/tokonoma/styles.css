@@ -1,0 +1,1333 @@
+/**
+ * 床の間 (Tokonoma) — 引き算と余白の家計月次明細
+ * Pattern 3 of Masu Kakeibo Design Explorations
+ */
+
+/* ==========================================================================
+   1. DESIGN TOKENS (LIGHT DEFAULT: 漆喰 / DARK: 墨)
+   ========================================================================== */
+:root,
+html[data-theme="light"] {
+  --bg-header-strip: #eae8e1;
+  --bg-page-cell: #f4f3ef;
+  --bg-highlight-cell: #fbfaf7;
+  --bg-active-cell: #e6e4dc;
+  --bg-elevated-sheet: #fbfaf7;
+
+  --hairline: rgba(18, 18, 18, 0.12);
+  --hairline-strong: rgba(18, 18, 18, 0.24);
+
+  --text-primary: #141413;
+  --text-secondary: #52514e;
+  --text-muted: #787670;
+
+  --accent-vermilion: #d9381e;
+  --accent-vermilion-soft: rgba(217, 56, 30, 0.09);
+  --accent-vermilion-mid: rgba(217, 56, 30, 0.20);
+  --accent-indigo: #2b4c7e;
+  --accent-indigo-soft: rgba(43, 76, 126, 0.09);
+  --semantic-positive: #1f6f4a;
+  --semantic-positive-soft: rgba(31, 111, 74, 0.10);
+
+  --halftone-dot: rgba(20, 20, 19, 0.08);
+  --halftone-indigo: rgba(43, 76, 126, 0.12);
+  --halftone-vermilion: rgba(217, 56, 30, 0.14);
+  --diagonal-hatch: rgba(20, 20, 19, 0.045);
+
+  --btn-primary-bg: #141413;
+  --btn-primary-fg: #fbfaf7;
+
+  --font-serif: "Instrument Serif", "Shippori Mincho", Georgia, serif;
+  --font-sans: "Inter", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-med: 240ms;
+  --dur-layout: 360ms;
+}
+
+html[data-theme="dark"] {
+  --bg-header-strip: #0d0d0c;
+  --bg-page-cell: #121211;
+  --bg-highlight-cell: #181816;
+  --bg-active-cell: #22221f;
+  --bg-elevated-sheet: #181816;
+
+  --hairline: rgba(244, 243, 239, 0.10);
+  --hairline-strong: rgba(244, 243, 239, 0.22);
+
+  --text-primary: #f4f3ef;
+  --text-secondary: #a8a69f;
+  --text-muted: #7c7a73;
+
+  --accent-vermilion: #ef4444;
+  --accent-vermilion-soft: rgba(239, 68, 68, 0.13);
+  --accent-vermilion-mid: rgba(239, 68, 68, 0.24);
+  --accent-indigo: #5b85c6;
+  --accent-indigo-soft: rgba(91, 133, 198, 0.13);
+  --semantic-positive: #4cc38a;
+  --semantic-positive-soft: rgba(76, 195, 138, 0.12);
+
+  --halftone-dot: rgba(244, 243, 239, 0.07);
+  --halftone-indigo: rgba(91, 133, 198, 0.14);
+  --halftone-vermilion: rgba(239, 68, 68, 0.16);
+  --diagonal-hatch: rgba(244, 243, 239, 0.04);
+
+  --btn-primary-bg: #f4f3ef;
+  --btn-primary-fg: #121211;
+}
+
+/* ==========================================================================
+   2. RESET & BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-page-cell);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition:
+    background-color var(--dur-med) var(--ease-out),
+    color var(--dur-med) var(--ease-out);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-vermilion);
+  outline-offset: -2px;
+}
+
+.mono,
+.mono-num,
+.num-col {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+.muted-caption {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.icon-box {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  min-width: 20px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  background-color: var(--bg-header-strip);
+  border: 1px solid var(--hairline-strong);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   3. TOP CONCEPT SWITCHER BAR (40px)
+   ========================================================================== */
+.concept-switcher-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 0 24px;
+  background-color: var(--bg-header-strip);
+  border-bottom: 1px solid var(--hairline-strong);
+  font-size: 12px;
+  line-height: 16px;
+  gap: 12px;
+}
+
+.concept-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.concept-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.concept-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.concept-tab .mono-num {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.concept-tab:hover {
+  background-color: var(--bg-page-cell);
+  color: var(--text-primary);
+}
+
+.concept-tab.active {
+  background-color: var(--bg-highlight-cell);
+  color: var(--text-primary);
+  font-weight: 500;
+  border-color: var(--hairline-strong);
+}
+
+.concept-tab.active .mono-num {
+  color: var(--accent-vermilion);
+  font-weight: 500;
+}
+
+.concept-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-utilities {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.util-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: var(--bg-page-cell);
+  border: 1px solid var(--hairline);
+  color: var(--text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.util-btn:hover {
+  background-color: var(--bg-highlight-cell);
+  color: var(--text-primary);
+  border-color: var(--hairline-strong);
+}
+
+.util-btn.is-active {
+  background-color: var(--accent-vermilion-soft);
+  border-color: var(--accent-vermilion);
+  color: var(--text-primary);
+}
+
+.btn-primary-bar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.btn-primary-bar:hover {
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   4. EXPOSED 1PX SWISS GRID SHELL
+   ========================================================================== */
+.swiss-sheet {
+  max-width: 1480px;
+  margin: 0 auto;
+  border-left: 1px solid var(--hairline-strong);
+  border-right: 1px solid var(--hairline-strong);
+  background-color: var(--bg-page-cell);
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+.grid-cell {
+  position: relative;
+  padding: 40px 44px;
+  border-right: 1px solid var(--hairline);
+  background-color: var(--bg-page-cell);
+}
+
+.grid-cell:last-child {
+  border-right: none;
+}
+
+.cell-header-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cell-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   5. 上段左: 月次ステートメント ＆ 朱印（豊かな余白）
+   ========================================================================== */
+.statement-moment-cell {
+  grid-column: span 5;
+  background-color: var(--bg-highlight-cell);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 52px;
+}
+
+.tokonoma-statement-space {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  height: 100%;
+  min-height: 340px;
+}
+
+.statement-period-heading {
+  font-family: "Shippori Mincho", serif;
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.statement-main-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statement-label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.statement-amount-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.serif-display {
+  font-family: var(--font-serif);
+  font-size: 68px;
+  line-height: 68px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.statement-delta {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: var(--semantic-positive-soft);
+  color: var(--semantic-positive);
+  font-weight: 500;
+}
+
+.statement-bottom-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 32px;
+  border-top: 1px solid var(--hairline);
+}
+
+.statement-savings-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statement-savings-figures {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.serif-sub-display {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 400;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.reserve-badge {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--accent-indigo);
+  background-color: var(--accent-indigo-soft);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* 朱印スタンプ */
+.hanko-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hanko-seal-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px dashed transparent;
+  color: var(--accent-vermilion);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.hanko-seal-btn:hover {
+  background-color: var(--accent-vermilion-soft);
+  border-color: var(--accent-vermilion-mid);
+}
+
+.hanko-seal-btn:active {
+  transform: scale(0.96);
+}
+
+.hanko-svg {
+  display: block;
+  transform: rotate(-2.5deg);
+  transition:
+    transform var(--dur-med) var(--ease-out),
+    opacity var(--dur-med) var(--ease-out);
+}
+
+.hanko-seal-btn.is-stamped .hanko-svg {
+  opacity: 0.92;
+  transform: rotate(-2.5deg) scale(1);
+}
+
+.hanko-seal-btn:not(.is-stamped) {
+  color: var(--text-muted);
+}
+
+.hanko-seal-btn:not(.is-stamped) .hanko-svg {
+  opacity: 0.22;
+  transform: rotate(0deg) scale(0.94);
+}
+
+.hanko-char-lg {
+  font-family: "Shippori Mincho", serif;
+  font-size: 18px;
+  font-weight: 500;
+  fill: currentColor;
+}
+
+.hanko-char-md {
+  font-family: "Shippori Mincho", serif;
+  font-size: 16px;
+  font-weight: 500;
+  fill: currentColor;
+}
+
+.hanko-char-sm {
+  font-family: "Shippori Mincho", serif;
+  font-size: 13px;
+  font-weight: 500;
+  fill: currentColor;
+}
+
+.hanko-caption {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  color: inherit;
+}
+
+/* ==========================================================================
+   6. 上段右: 暮らしの配分（5区画の間取り図）
+   ========================================================================== */
+.treemap-moment-cell {
+  grid-column: span 7;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 44px;
+}
+
+.treemap-mode-tabs {
+  display: inline-flex;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--bg-header-strip);
+}
+
+.mode-tab {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 14px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  border-right: 1px solid var(--hairline);
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.mode-tab:last-child {
+  border-right: none;
+}
+
+.mode-tab:hover {
+  background-color: var(--bg-page-cell);
+  color: var(--text-primary);
+}
+
+.mode-tab.active {
+  background-color: var(--bg-highlight-cell);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 5区画の間取り図ステージ */
+.floorplan-stage {
+  display: flex;
+  width: 100%;
+  height: 360px;
+  border: 1.5px solid var(--text-primary);
+  background-color: var(--bg-highlight-cell);
+  overflow: hidden;
+}
+
+.floorplan-occupied-wing {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: 1.5px solid var(--text-primary);
+  transition: width var(--dur-layout) var(--ease-out);
+}
+
+.floorplan-lower-wing {
+  display: flex;
+  width: 100%;
+  border-top: 1px solid var(--hairline-strong);
+  transition: height var(--dur-layout) var(--ease-out);
+}
+
+.floorplan-cultural-wing {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-left: 1px solid var(--hairline-strong);
+  transition: width var(--dur-layout) var(--ease-out);
+}
+
+/* 各区画セル（部屋名・金額・比率の3点のみをゆったり配置） */
+.room-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 24px;
+  text-align: left;
+  overflow: hidden;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    width var(--dur-layout) var(--ease-out),
+    height var(--dur-layout) var(--ease-out);
+}
+
+.room-housing {
+  background-color: var(--bg-page-cell);
+  background-image: radial-gradient(var(--halftone-indigo) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.room-food {
+  background-color: var(--bg-highlight-cell);
+  background-image: radial-gradient(var(--halftone-dot) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.room-culture.is-featured-investment {
+  background-color: var(--accent-vermilion-soft);
+  background-image: radial-gradient(var(--halftone-vermilion) 1.25px, transparent 1.25px);
+  background-size: 10px 10px;
+  border-left: 3px solid var(--accent-vermilion);
+}
+
+.room-transit {
+  background-color: var(--bg-page-cell);
+  border-top: 1px solid var(--hairline-strong);
+}
+
+.room-yohaku {
+  height: 100%;
+  padding: 28px 32px;
+  background-color: var(--bg-highlight-cell);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--diagonal-hatch),
+    var(--diagonal-hatch) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.room-cell:hover {
+  background-color: var(--bg-active-cell);
+}
+
+.room-culture.is-featured-investment:hover {
+  background-color: var(--accent-vermilion-mid);
+}
+
+.room-cell.is-selected {
+  outline: 2px solid var(--accent-vermilion);
+  outline-offset: -2px;
+  z-index: 3;
+}
+
+.room-name-jp {
+  font-family: "Shippori Mincho", serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.room-culture .room-name-jp {
+  color: var(--accent-vermilion);
+}
+
+.room-bottom-figures {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.room-amount {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.serif-room-figure {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 36px;
+  font-weight: 400;
+}
+
+.room-ratio {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   7. 下段左: 入出金台帳（4列・シンプル）
+   ========================================================================== */
+.ledger-table-cell {
+  grid-column: span 8;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ledger-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--hairline-strong);
+  background-color: var(--bg-highlight-cell);
+}
+
+.ledger-title-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.ledger-room-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.room-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline);
+  background-color: var(--bg-page-cell);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.room-filter-btn:hover {
+  background-color: var(--bg-active-cell);
+  color: var(--text-primary);
+}
+
+.room-filter-btn.active {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-color: var(--btn-primary-bg);
+}
+
+.dot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-housing { background-color: var(--accent-indigo); }
+.dot-food { background-color: var(--semantic-positive); }
+.dot-culture { background-color: var(--accent-vermilion); }
+.dot-transit { background-color: var(--text-secondary); }
+
+.ledger-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: var(--bg-page-cell);
+  border: 1px solid var(--hairline-strong);
+  min-width: 200px;
+}
+
+.search-input {
+  width: 100%;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.table-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.architectural-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.architectural-table thead tr {
+  height: 36px;
+  background-color: var(--bg-header-strip);
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+.architectural-table th {
+  padding: 0 24px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-right: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+
+.architectural-table th:last-child {
+  border-right: none;
+}
+
+.architectural-table tbody tr {
+  height: 48px;
+  border-bottom: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.architectural-table tbody tr:hover {
+  background-color: var(--bg-active-cell);
+}
+
+.architectural-table tbody tr.is-selected {
+  background-color: var(--bg-highlight-cell);
+  box-shadow: inset 3px 0 0 var(--accent-vermilion);
+}
+
+.architectural-table td {
+  padding: 0 24px;
+  font-size: 13px;
+  line-height: 20px;
+  border-right: 1px solid var(--hairline);
+  vertical-align: middle;
+}
+
+.architectural-table td:last-child {
+  border-right: none;
+}
+
+.col-date {
+  width: 108px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.col-room {
+  width: 140px;
+  white-space: nowrap;
+}
+
+.col-amount {
+  width: 136px;
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.room-tag-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.merchant-cell-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.merchant-primary {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.merchant-memo {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+/* ==========================================================================
+   8. 下段右: 取引詳細（静かな余白の中に佇む構成）
+   ========================================================================== */
+.blueprint-drawer-cell {
+  grid-column: span 4;
+  background-color: var(--bg-highlight-cell);
+  display: flex;
+  flex-direction: column;
+  padding: 44px 40px;
+}
+
+.voucher-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  flex: 1;
+}
+
+.voucher-meta-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.voucher-room-badge {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--hairline-strong);
+  background-color: var(--bg-page-cell);
+}
+
+.voucher-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voucher-merchant {
+  font-family: "Shippori Mincho", serif;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.voucher-memo {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-secondary);
+}
+
+.voucher-total-strip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-top: 1px solid var(--text-primary);
+  border-bottom: 1px solid var(--text-primary);
+}
+
+.voucher-total-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.serif-voucher-total {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.voucher-items-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.voucher-items-header {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.voucher-items-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.voucher-item-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+  line-height: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--hairline);
+}
+
+.voucher-footer-note {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   9. モーダル: 記帳 ([N])
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 18, 17, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--bg-elevated-sheet);
+  border: 1.5px solid var(--text-primary);
+  padding: 32px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+.modal-title {
+  font-family: "Shippori Mincho", serif;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-input {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background-color: var(--bg-page-cell);
+  border: 1px solid var(--hairline-strong);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 8px;
+  border-top: 1px solid var(--hairline);
+}
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+}
+
+.btn-secondary {
+  background-color: var(--bg-highlight-cell);
+  color: var(--text-primary);
+  border: 1px solid var(--hairline-strong);
+}
+
+/* ==========================================================================
+   10. 赤入れ検証 ([U]) ＆ スロップ比較モード ([B])
+   ========================================================================== */
+body.xray-active [data-xray] {
+  outline: 1px dashed var(--accent-vermilion) !important;
+  outline-offset: -1px;
+}
+
+body.xray-active [data-xray]::after {
+  content: attr(data-xray);
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  z-index: 40;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: var(--accent-vermilion);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 14px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+body.xray-active .concept-switcher-bar[data-xray]::after {
+  right: auto;
+  left: 360px;
+  top: 10px;
+}
+
+body.xray-active .util-btn[data-xray]::after,
+body.xray-active .btn-primary-bar[data-xray]::after {
+  display: none;
+}
+
+.slop-audit-banner {
+  background-color: #2e1065;
+  color: #f3e8ff;
+  border-bottom: 2px solid #a855f7;
+  padding: 16px 24px;
+}
+
+.slop-audit-banner[hidden] {
+  display: none;
+}
+
+.slop-audit-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slop-audit-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.slop-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.slop-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.slop-audit-item {
+  padding: 10px 12px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 8px;
+}
+
+.slop-audit-item .mono {
+  color: #f472b6;
+  display: block;
+  margin-bottom: 4px;
+}
+
+body.slop-mode {
+  background: radial-gradient(circle at 20% 10%, #1e1b4b, #090d16 70%) !important;
+  color: #e2e8f0 !important;
+}
+
+body.slop-mode .swiss-sheet {
+  padding: 20px;
+  border: none;
+  background: transparent;
+}
+
+body.slop-mode .grid-row {
+  gap: 18px;
+  margin-bottom: 18px;
+  border: none;
+}
+
+body.slop-mode .grid-cell {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.35), rgba(15, 23, 42, 0.85)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.45) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.25) !important;
+}
+
+body.slop-mode .serif-display {
+  font-family: var(--font-sans) !important;
+  font-weight: 800 !important;
+  background: linear-gradient(90deg, #c084fc, #38bdf8, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   11. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1180px) {
+  .statement-moment-cell,
+  .treemap-moment-cell,
+  .ledger-table-cell,
+  .blueprint-drawer-cell {
+    grid-column: span 12;
+    border-right: none;
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  .slop-audit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .concept-switcher-bar {
+    padding: 8px 16px;
+    flex-wrap: wrap;
+  }
+  .grid-cell,
+  .statement-moment-cell,
+  .treemap-moment-cell,
+  .blueprint-drawer-cell {
+    padding: 28px 20px;
+  }
+  .serif-display {
+    font-size: 48px;
+    line-height: 52px;
+  }
+  .floorplan-stage {
+    flex-direction: column;
+    height: auto;
+  }
+  .floorplan-occupied-wing,
+  .room-yohaku {
+    width: 100% !important;
+    border-right: none;
+  }
+  .floorplan-occupied-wing {
+    height: 320px;
+    border-bottom: 1.5px solid var(--text-primary);
+  }
+}
